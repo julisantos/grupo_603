@@ -13,6 +13,12 @@
     android:orientation="vertical">
 
 
+    <ImageView
+        android:id="@+id/imageObj"
+        android:layout_width="356dp"
+        android:layout_height="232dp"
+        app:srcCompat="@drawable/i0" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="416dp">
@@ -65,14 +71,5 @@
 
 
     </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="185dp"
-        android:layout_height="200dp"
-        android:layout_alignParentTop="@+id/btnE"
-        android:layout_marginRight="103dp"
-        app:srcCompat="@drawable/e1" />
-
 
 </LinearLayout>

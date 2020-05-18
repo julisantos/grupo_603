@@ -1,13 +1,16 @@
 package jyc.sa.ar;
 
+import androidx.annotation.InspectableProperty;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.nio.file.Files;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,7 +23,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //imgVocal = (ImageView) findViewById(R.id.imageObj);
+        imgVocal = (ImageView) findViewById(R.id.imageObj);
         generarImgRandom();
 
     }
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     private void generarImgRandom() {
 
         final Random letraRandom = new Random();
-        switch (letraRandom.nextInt(4)){
+        switch (letraRandom.nextInt(5)){
             case 0: vocalImg = "a";
                 break;
             case 1: vocalImg = "e";
@@ -56,8 +59,9 @@ public class MainActivity extends AppCompatActivity {
             case 4: vocalImg = "u";
                 break;
         }
-        Drawable d = Drawable.createFromPath("@drawable/e1.jpg");
-        imgVocal.setImageDrawable(d);
+        final Random numRandom = new Random();
+        String numVocal = String.format("%d", numRandom.nextInt(1));
+        imgVocal.setImageResource(getResources().getIdentifier(vocalImg+numVocal,"drawable", getPackageName()));
     }
 
     private void compararConImg(String vocal) {
