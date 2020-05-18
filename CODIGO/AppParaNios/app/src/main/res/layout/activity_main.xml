@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activitySeleccionarLetra"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="16dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="16dp"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+
+    <ImageView
+        android:id="@+id/imageObj"
+        android:layout_width="match_parent"
+        android:layout_height="260dp"
+        android:layout_marginTop="15dp"
+        />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/btnA"
+            android:layout_width="175dp"
+            android:layout_height="130dp"
+            android:onClick="seleccionarVocal"
+            android:text="A" />
+
+        <Button
+            android:id="@+id/btnE"
+            android:layout_width="175dp"
+            android:layout_height="130dp"
+            android:layout_alignLeft="@+id/btnA"
+            android:layout_marginLeft="206dp"
+            android:text="E"
+            android:onClick="seleccionarVocal"/>
+
+        <Button
+            android:id="@+id/btnI"
+            android:layout_width="175dp"
+            android:layout_height="130dp"
+            android:layout_alignBottom="@+id/btnA"
+            android:layout_marginBottom="-139dp"
+            android:text="I"
+            android:onClick="seleccionarVocal"/>
+
+        <Button
+            android:id="@+id/btnO"
+            android:layout_width="175dp"
+            android:layout_height="130dp"
+            android:layout_alignBottom="@+id/btnI"
+            android:layout_alignParentTop="@+id/btnE"
+            android:layout_marginLeft="206dp"
+            android:text="O"
+            android:onClick="seleccionarVocal"/>
+
+        <Button
+            android:id="@+id/btnU"
+            android:layout_width="175dp"
+            android:layout_height="130dp"
+            android:layout_alignBottom="@+id/btnI"
+            android:layout_alignParentTop="@+id/btnE"
+            android:layout_marginBottom="-139dp"
+            android:layout_marginLeft="103dp"
+            android:text="U"
+            android:onClick="seleccionarVocal"/>
+
+
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>
