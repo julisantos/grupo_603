@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        imgVocal = (ImageView) findViewById(R.id.imageObj);
+        //imgVocal = (ImageView) findViewById(R.id.imageObj);
         generarImgRandom();
 
     }
