@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         final Random numRandom = new Random();
-        String numVocal = String.format("%d", numRandom.nextInt(2));
+        String numVocal = String.format("%d", numRandom.nextInt(3));
         imgVocal.setImageResource(getResources().getIdentifier(vocalImg+numVocal,"drawable", getPackageName()));
     }
 
