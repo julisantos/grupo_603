@@ -17,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
 
     ImageView imgVocal;
     String vocalImg;
+    int cantCorrectas=0;
+    int cantIncorrectas=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +69,14 @@ public class MainActivity extends AppCompatActivity {
 
         if(vocal.equals(vocalImg)) {
             Toast.makeText(this, "Respuesta Correcta el animal de la imagen empieza con " + vocalImg, Toast.LENGTH_LONG).show();
+            cantCorrectas++;
+            //Toast.makeText(this, "Cantidad de respuestas correctas: "+cantCorrectas, Toast.LENGTH_LONG).show();
+            generarImgRandom();
+
         } else {
             Toast.makeText(this,"Respuesta Incorrecta el animal de la imagen empieza con "+ vocalImg,Toast.LENGTH_LONG).show();
+            cantIncorrectas++;
+            //Toast.makeText(this, "Cantidad de respuestas incorrectas: "+cantIncorrectas, Toast.LENGTH_LONG).show();
         }
     }
 }
