@@ -21,51 +21,52 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="416dp">
+        android:layout_height="616dp">
 
         <Button
             android:id="@+id/btnA"
-            android:layout_width="175dp"
-            android:layout_height="130dp"
+            android:layout_width="151dp"
+            android:layout_height="107dp"
             android:onClick="seleccionarVocal"
             android:text="A" />
 
         <Button
             android:id="@+id/btnE"
-            android:layout_width="173dp"
-            android:layout_height="128dp"
+            android:layout_width="148dp"
+            android:layout_height="107dp"
             android:layout_alignLeft="@+id/btnA"
-            android:layout_marginLeft="206dp"
+            android:layout_marginLeft="205dp"
             android:onClick="seleccionarVocal"
             android:text="E" />
 
         <Button
             android:id="@+id/btnI"
-            android:layout_width="175dp"
-            android:layout_height="130dp"
+            android:layout_width="153dp"
+            android:layout_height="117dp"
             android:layout_alignBottom="@+id/btnA"
-            android:layout_marginBottom="-139dp"
+            android:layout_marginBottom="-126dp"
             android:onClick="seleccionarVocal"
             android:text="I" />
 
         <Button
             android:id="@+id/btnO"
-            android:layout_width="175dp"
-            android:layout_height="130dp"
+            android:layout_width="146dp"
+            android:layout_height="116dp"
             android:layout_alignBottom="@+id/btnI"
             android:layout_alignParentTop="@+id/btnE"
             android:layout_marginLeft="206dp"
+            android:layout_marginBottom="1dp"
             android:onClick="seleccionarVocal"
             android:text="O" />
 
         <Button
             android:id="@+id/btnU"
-            android:layout_width="175dp"
-            android:layout_height="130dp"
+            android:layout_width="157dp"
+            android:layout_height="118dp"
             android:layout_alignBottom="@+id/btnI"
             android:layout_alignParentTop="@+id/btnE"
             android:layout_marginLeft="103dp"
-            android:layout_marginBottom="-139dp"
+            android:layout_marginBottom="-126dp"
             android:onClick="seleccionarVocal"
             android:text="U" />
 

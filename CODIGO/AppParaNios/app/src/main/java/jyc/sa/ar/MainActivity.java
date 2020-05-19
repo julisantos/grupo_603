@@ -25,7 +25,6 @@ public class MainActivity extends AppCompatActivity {
 
         imgVocal = (ImageView) findViewById(R.id.imageObj);
         generarImgRandom();
-
     }
 
     public void seleccionarVocal(View view) {
@@ -60,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         final Random numRandom = new Random();
-        String numVocal = String.format("%d", numRandom.nextInt(1));
+        String numVocal = String.format("%d", numRandom.nextInt(2));
         imgVocal.setImageResource(getResources().getIdentifier(vocalImg+numVocal,"drawable", getPackageName()));
     }
 
