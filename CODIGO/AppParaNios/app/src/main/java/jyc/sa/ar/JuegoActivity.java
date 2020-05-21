@@ -13,7 +13,7 @@ import android.widget.Toast;
 import java.nio.file.Files;
 import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
+public class JuegoActivity extends AppCompatActivity {
 
     ImageView imgVocal;
     String vocalImg;

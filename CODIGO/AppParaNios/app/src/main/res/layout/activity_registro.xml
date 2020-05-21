@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RegistroActivity">
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="20dip"
+        android:orientation="vertical"
+        tools:ignore="MissingConstraints">
+
+        <EditText android:id="@+id/txtNombre"
+            android:layout_marginTop="15dip"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:hint="Nombre"
+            android:inputType="text" />
+
+
+        <EditText android:id="@+id/txtApellido"
+            android:layout_marginTop="15dip"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:hint="Apellido"
+            android:inputType="text" />
+
+        <EditText android:id="@+id/numDni"
+            android:layout_marginTop="15dip"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:hint="Dni"
+            android:inputType="number" />
+
+        <EditText android:id="@+id/txtEmail"
+            android:layout_marginTop="15dip"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:hint="Email"
+            android:inputType="textEmailAddress" />
+
+        <EditText android:id="@+id/txtPass"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:layout_marginTop="15dip"
+             />
+
+        <EditText android:id="@+id/numComision"
+            android:layout_marginTop="15dip"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:hint="Comision"
+            android:inputType="number" />
+
+        <EditText android:id="@+id/numGrupo"
+            android:layout_marginTop="15dip"
+            android:layout_marginBottom="30dip"
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:hint="Grupo"
+            android:inputType="number" />
+
+
+        <Button android:id="@+id/btnRegistrar"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Registrar"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="15dip"
+            android:paddingRight="15dip" />
+
+        <TextView android:id="@+id/link_to_login"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dip"
+            android:layout_marginBottom="40dip"
+            android:text="Ya tienes cuenta! Accede!"
+            android:gravity="center"
+            android:textSize="20dip"
+            android:textColor="#0b84aa"/>
+
+        <TextView
+            android:id="@+id/textrespuesta"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dip"
+            android:layout_marginBottom="40dip"
+
+            android:gravity="center"
+            android:textColor="#0b84aa"
+            android:textSize="20dip" />
+
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
