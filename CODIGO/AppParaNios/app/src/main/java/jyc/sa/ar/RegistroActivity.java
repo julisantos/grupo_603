@@ -1,6 +1,7 @@
 package jyc.sa.ar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +30,7 @@ public class RegistroActivity extends AppCompatActivity {
     private EditText txtComision;
     private Button btnRegistrar;
     private TextView txtResp;
-    private Handler HandlerbtnRegistrar;///POSIBLE PROBLEMA
+    //private Handler HandlerbtnRegistrar;///POSIBLE PROBLEMA
     public IntentFilter filtro;
     private ReceptorOperacion receiver = new ReceptorOperacion() {
         @Override
@@ -42,6 +43,7 @@ public class RegistroActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
 
@@ -55,9 +57,6 @@ public class RegistroActivity extends AppCompatActivity {
         btnRegistrar = (Button) findViewById(R.id.btnRegistrar);
         txtResp = (TextView) findViewById(R.id.textrespuesta);
 
-        btnRegistrar.setOnClickListener((View.OnClickListener) HandlerbtnRegistrar);
-
-        configurarBroadcastReceiver();/// cambiar nombre
 
         View.OnClickListener HandlerbtnRegistrar = new View.OnClickListener() {
             @Override
@@ -72,9 +71,11 @@ public class RegistroActivity extends AppCompatActivity {
                     obj.put("password", txtPassword.getText().toString());
                     obj.put("commission", txtComision.getText().toString());
                     obj.put("group", txtGrupo.getText().toString());
+                    Log.i("ACA", "Llego a esta parte del codigo");
                     Intent i = new Intent(RegistroActivity.this, ServicioHttp.class);
                     i.putExtra("uri", URI_REGISTRO);
                     i.putExtra("datosJson", obj.toString());
+
                     startService(i);
 
                 } catch (JSONException e) {
@@ -85,6 +86,10 @@ public class RegistroActivity extends AppCompatActivity {
 
 
         };
+
+        btnRegistrar.setOnClickListener((View.OnClickListener) HandlerbtnRegistrar);
+
+        configurarBroadcastReceiver();/// cambiar nombre
     }
 
     private void configurarBroadcastReceiver() {
@@ -96,8 +101,6 @@ public class RegistroActivity extends AppCompatActivity {
     public abstract class ReceptorOperacion extends BroadcastReceiver {
 
         public void onReceive(Context context, Intent intent) {
-
-
             {
                 try {
                     String datosJsonString = intent.getStringExtra("datosJson");
@@ -110,7 +113,6 @@ public class RegistroActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-
 
         }
     }
