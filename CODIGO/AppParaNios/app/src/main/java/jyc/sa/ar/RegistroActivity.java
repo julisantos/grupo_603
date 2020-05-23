@@ -93,7 +93,7 @@ public class RegistroActivity extends AppCompatActivity {
     }
 
     private void configurarBroadcastReceiver() {
-        filtro = new IntentFilter("com.example.intentservice.intent.action.RESPUESTA_OPERACION");
+        filtro = new IntentFilter("jyc.sa.ar.intent.action.MAIN");
         filtro.addCategory(Intent.CATEGORY_DEFAULT);
         registerReceiver(receiver, filtro);
     }
@@ -105,7 +105,7 @@ public class RegistroActivity extends AppCompatActivity {
                 try {
                     String datosJsonString = intent.getStringExtra("datosJson");
                     JSONObject datosJson = new JSONObject(datosJsonString);
-                    Log.i("SERVICIO_REGISTRO", "Se envia al server" + datosJson.toString());
+                    Log.i("SERVICIO_REGISTRO", "Se envia al server" + datosJsonString);
 
                     txtResp.setText(datosJsonString);
                     Toast.makeText(context.getApplicationContext(), "Se recibio respuesta del Server", Toast.LENGTH_LONG).show();

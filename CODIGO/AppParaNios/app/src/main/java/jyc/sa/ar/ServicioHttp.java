@@ -27,7 +27,7 @@ public class ServicioHttp extends IntentService {
     private URL mURL;
 
     public ServicioHttp() {
-        super("ServicioHttpGET");
+        super("ServicioHttpPOST");
     }
 
     @Override
@@ -37,13 +37,12 @@ public class ServicioHttp extends IntentService {
     }
 
     protected void onHandleIntent(Intent intent){
-        String uri = intent.getExtras().getString("uri");
         try {
+            String uri = intent.getExtras().getString("uri");
             JSONObject datosJson = new JSONObject(intent.getExtras().getString("datosJson"));
             servidorPost(uri,datosJson);
         } catch (JSONException e) {
-            e.printStackTrace();
-            Log.e("ERROR","Servicio onHandleIntent");
+            Log.e("SERVICIO_REGISTRO","ERROR"+ e.toString());
         }
 
     }
@@ -60,7 +59,7 @@ public class ServicioHttp extends IntentService {
             return;
         }
 
-        Intent i =new Intent("com.example.intentservice.intent.action.RESPUESTA_OPERACION");
+        Intent i =new Intent("jyc.sa.ar.intent.action.MAIN");
         i.putExtra("datosJson", result);
         sendBroadcast(i);
 
@@ -73,7 +72,7 @@ public class ServicioHttp extends IntentService {
         try {
             URL mUrl=new URL(uri);
             conexionHttp = (HttpURLConnection) mUrl.openConnection();
-            conexionHttp.setRequestProperty("Content-Type","application/json; charset-UTF-8");
+            conexionHttp.setRequestProperty("Content-Type","application/json; charset=UTF-8");
             conexionHttp.setDoOutput(true);
             conexionHttp.setDoInput(true);
             conexionHttp.setConnectTimeout(5000);
@@ -84,12 +83,12 @@ public class ServicioHttp extends IntentService {
             wr.flush();
             wr.close();
             conexionHttp.connect();
-
             int responseCode= conexionHttp.getResponseCode();
             if((responseCode == conexionHttp.HTTP_OK) || (responseCode == conexionHttp.HTTP_CREATED))
-                result=convertInputStreamToString(new InputStreamReader(conexionHttp.getInputStream())).toString();
+                result=convertInputStreamToString(new InputStreamReader(conexionHttp.getInputStream()));
             else
                 result="NO_OK";
+
 
             msjExc=null;
             conexionHttp.disconnect();
@@ -104,7 +103,6 @@ public class ServicioHttp extends IntentService {
     }
 
     private String convertInputStreamToString(InputStreamReader inputStreamReader) {//POSIBLE PROBLEMA
-
         String convert = inputStreamReader.toString();
         return convert;
 
