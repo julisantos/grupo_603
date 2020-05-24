@@ -29,7 +29,7 @@ public class RegistroActivity extends AppCompatActivity {
     private EditText txtGrupo;
     private EditText txtComision;
     private Button btnRegistrar;
-    private TextView txtResp;
+    public static TextView txtResp;
     //private Handler HandlerbtnRegistrar;///POSIBLE PROBLEMA
     public IntentFilter filtro;
     private ReceptorOperacion receiver = new ReceptorOperacion() {
@@ -58,7 +58,7 @@ public class RegistroActivity extends AppCompatActivity {
         txtResp = (TextView) findViewById(R.id.textrespuesta);
 
 
-        View.OnClickListener HandlerbtnRegistrar = new View.OnClickListener() {
+        btnRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 JSONObject obj = new JSONObject();
@@ -71,7 +71,6 @@ public class RegistroActivity extends AppCompatActivity {
                     obj.put("password", txtPassword.getText().toString());
                     obj.put("commission", txtComision.getText().toString());
                     obj.put("group", txtGrupo.getText().toString());
-                    Log.i("ACA", "Llego a esta parte del codigo");
                     Intent i = new Intent(RegistroActivity.this, ServicioHttp.class);
                     i.putExtra("uri", URI_REGISTRO);
                     i.putExtra("datosJson", obj.toString());
@@ -81,20 +80,17 @@ public class RegistroActivity extends AppCompatActivity {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                ;
+
             }
 
-
-        };
-
-        btnRegistrar.setOnClickListener((View.OnClickListener) HandlerbtnRegistrar);
-
+        });
         configurarBroadcastReceiver();/// cambiar nombre
     }
 
     private void configurarBroadcastReceiver() {
-        filtro = new IntentFilter("jyc.sa.ar.intent.action.MAIN");
-        filtro.addCategory(Intent.CATEGORY_DEFAULT);
+        //filtro = new IntentFilter("jyc.sa.ar.intent.action.MAIN");
+        filtro=new IntentFilter("android.intent.action.MAIN");
+        filtro.addCategory("android.intent.category.DEFAULT");
         registerReceiver(receiver, filtro);
     }
 
@@ -108,6 +104,7 @@ public class RegistroActivity extends AppCompatActivity {
                     Log.i("SERVICIO_REGISTRO", "Se envia al server" + datosJsonString);
 
                     txtResp.setText(datosJsonString);
+
                     Toast.makeText(context.getApplicationContext(), "Se recibio respuesta del Server", Toast.LENGTH_LONG).show();
                 } catch (JSONException e) {
                     e.printStackTrace();
