@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
@@ -34,7 +35,7 @@ public class ServicioHttp extends IntentService {
     private URL mURL;
 
     public ServicioHttp() {
-        super("ServicioHttpPOST");
+        super("ServicioHttpGET");
     }
 
     @Override
@@ -68,7 +69,7 @@ public class ServicioHttp extends IntentService {
             return;
         }
 
-        Intent i =new Intent("com.example.intentservice.intent.action.RESPUESTA_OPERACION");
+        Intent i =new Intent("jyc.sa.intent.action.MAIN");
         i.putExtra("datosJson", result);
         sendBroadcast(i);
 
@@ -81,7 +82,7 @@ public class ServicioHttp extends IntentService {
     }
 
     private String post(String uri, JSONObject datosJson) {
-        HttpURLConnection urlConnection=null;
+        HttpURLConnection conexionHttp=null;
         String result="";
 
         try {
@@ -89,7 +90,7 @@ public class ServicioHttp extends IntentService {
             conexionHttp = (HttpURLConnection) mUrl.openConnection();
             conexionHttp.setRequestProperty("Content-Type","application/json; charset=UTF-8");
             conexionHttp.setDoOutput(true);
-            //conexionHttp.setDoInput(true);
+            conexionHttp.setDoInput(true);
             conexionHttp.setConnectTimeout(5000);
             conexionHttp.setRequestMethod("POST");
             //DataOutputStream wr =new DataOutputStream(conexionHttp.getOutputStream());
@@ -101,8 +102,10 @@ public class ServicioHttp extends IntentService {
 
             conexionHttp.connect();
             int responseCode= conexionHttp.getResponseCode();
-
+            Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.getResponseMessage());
+            Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ responseCode);
             if((responseCode == conexionHttp.HTTP_OK) || (responseCode == conexionHttp.HTTP_CREATED)) {
+                Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.toString());
 
                 result = convertInputStreamToString(new InputStreamReader(conexionHttp.getInputStream()));
 
@@ -121,6 +124,7 @@ public class ServicioHttp extends IntentService {
     }
 
     private String convertInputStreamToString(InputStreamReader inputStreamReader) {//POSIBLE PROBLEMA
+        Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ inputStreamReader.toString());
         String convert = inputStreamReader.toString();
         return convert;
 

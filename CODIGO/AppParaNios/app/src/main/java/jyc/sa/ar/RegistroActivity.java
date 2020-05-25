@@ -88,9 +88,8 @@ public class RegistroActivity extends AppCompatActivity {
     }
 
     private void configurarBroadcastReceiver() {
-        //filtro = new IntentFilter("jyc.sa.ar.intent.action.MAIN");
-        filtro=new IntentFilter("android.intent.action.MAIN");
-        filtro.addCategory("android.intent.category.DEFAULT");
+        filtro=new IntentFilter("jyc.sa.intent.action.MAIN");
+        filtro.addCategory("jyc.sa.intent.category.LAUNCHER");
         registerReceiver(receiver, filtro);
     }
 
