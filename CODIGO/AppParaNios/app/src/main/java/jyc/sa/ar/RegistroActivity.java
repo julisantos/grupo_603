@@ -38,8 +38,8 @@ public class RegistroActivity extends AppCompatActivity {
 
         }
     }; ///
-    private static final String URI_LOGIN = "http://so-unlam.net.ar/api/login";
-    private static final String URI_REGISTRO = "http://so-unlam.net.ar/api/register";
+    private static final String URI_LOGIN = "http://so-unlam.net.ar/api/api/login";
+    private static final String URI_REGISTRO = "http://so-unlam.net.ar/api/api/register";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

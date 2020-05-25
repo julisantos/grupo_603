@@ -15,6 +15,7 @@ import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -93,8 +94,8 @@ public class ServicioHttp extends IntentService {
             conexionHttp.setDoInput(true);
             conexionHttp.setConnectTimeout(5000);
             conexionHttp.setRequestMethod("POST");
-            //DataOutputStream wr =new DataOutputStream(conexionHttp.getOutputStream());
-            OutputStream wr = new BufferedOutputStream(conexionHttp.getOutputStream());
+            DataOutputStream wr =new DataOutputStream(conexionHttp.getOutputStream());
+            //OutputStream wr = new BufferedOutputStream(conexionHttp.getOutputStream());
             wr.write(datosJson.toString().getBytes("UTF-8"));
             Log.i("SERVICIO_REGISTRO", "Se envia al server"+datosJson.toString());
             wr.flush();
@@ -106,7 +107,6 @@ public class ServicioHttp extends IntentService {
             Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ responseCode);
             if((responseCode == conexionHttp.HTTP_OK) || (responseCode == conexionHttp.HTTP_CREATED)) {
                 Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.toString());
-
                 result = convertInputStreamToString(new InputStreamReader(conexionHttp.getInputStream()));
 
             }else {
@@ -123,10 +123,18 @@ public class ServicioHttp extends IntentService {
         return result;
     }
 
-    private String convertInputStreamToString(InputStreamReader inputStreamReader) {//POSIBLE PROBLEMA
-        Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ inputStreamReader.toString());
-        String convert = inputStreamReader.toString();
-        return convert;
+    private String convertInputStreamToString(InputStreamReader input) throws IOException {//POSIBLE PROBLEMA
+        Log.e("LLEGA ACA??1111","ENTRA AL CONVERT?? "+ input.toString());
+        BufferedReader streamReader = new BufferedReader(input);
+        StringBuilder respondStreamBuild = new StringBuilder();
+        String inputStr;
+        while ((inputStr = streamReader.readLine()) != null)
+            respondStreamBuild.append(inputStr);
+        //  String convert = inputStreamReader.toString();
+
+        Log.e("LLEGA ACA??2222","Termina el CONVERT?? "+ respondStreamBuild.toString());
+
+        return respondStreamBuild.toString();
 
          /*   ByteArrayOutputStream result = new ByteArrayOutputStream();
             byte[] buffer = new byte[1024];
