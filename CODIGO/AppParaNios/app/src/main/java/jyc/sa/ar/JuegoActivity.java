@@ -3,9 +3,15 @@ package jyc.sa.ar;
 import androidx.annotation.InspectableProperty;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -19,6 +25,24 @@ public class JuegoActivity extends AppCompatActivity {
     String vocalImg;
     int cantCorrectas=0;
     int cantIncorrectas=0;
+
+    private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo ni = manager.getActiveNetworkInfo();
+            onNetworkChange(ni);
+        }
+
+        private void onNetworkChange(NetworkInfo networkInfo) {
+            if (networkInfo != null && networkInfo.isConnected() ) {
+                Log.d("MenuActivity", "CONNECTED");
+            }else{
+                Log.d("MenuActivity", "DISCONNECTED");
+            }
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

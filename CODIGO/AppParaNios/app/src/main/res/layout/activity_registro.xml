@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegistroActivity">
+    tools:context=".RegistroActivity"
+    android:orientation="vertical"
+>
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -53,27 +55,34 @@
             android:layout_marginTop="15dip"
             android:hint="Password"
             android:inputType="textPassword" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60dip">
+
+            <EditText
+                android:id="@+id/numComision"
+                android:layout_width="155dp"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="15dip"
+                android:hint="Comision"
+                android:inputType="number" />
+
+            <EditText
+                android:id="@+id/numGrupo"
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:layout_alignLeft="@+id/numComision"
+                android:layout_marginTop="15dip"
+
+                android:layout_gravity="right"
+                android:layout_marginLeft="160dp"
 
 
-        <EditText
-            android:id="@+id/numComision"
-            android:layout_width="159dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/numGrupo"
-            android:layout_marginTop="15dip"
-            android:hint="Comision"
-            android:inputType="number" />
+                android:hint="Grupo"
+                android:inputType="number" />
+        </RelativeLayout>
 
-        <EditText
-            android:id="@+id/numGrupo"
-            android:layout_width="159dp"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/txtPass"
-            android:layout_marginLeft="190dp"
-
-
-            android:hint="Grupo"
-            android:inputType="number" />
 
         <Button
             android:id="@+id/btnRegistrar"
@@ -88,10 +97,11 @@
             android:id="@+id/link_to_login"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dip"
-            android:layout_marginBottom="40dip"
+            android:layout_marginTop="5dip"
+            android:layout_marginBottom="5dip"
             android:gravity="center"
             android:text="Ya tienes cuenta! Accede!"
+            android:onClick="accederALogin"
             android:textColor="#0b84aa"
             android:textSize="20dip" />
 
@@ -99,14 +109,16 @@
             android:id="@+id/textrespuesta"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="40dip"
-            android:layout_marginBottom="40dip"
-
+            android:layout_marginTop="2dip"
+            android:layout_marginBottom="10dip"
             android:gravity="center"
             android:textColor="#0b84aa"
-            android:textSize="20dip" />
+            android:textSize="16dip" />
+
+
 
 
     </LinearLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

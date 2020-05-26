@@ -1,48 +1,31 @@
 package jyc.sa.ar;
 
-
 import android.app.IntentService;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.util.Log;
-
-import androidx.annotation.Nullable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
-import static jyc.sa.ar.RegistroActivity.txtResp;
-
-public class ServicioHttp extends IntentService {
-
+public class ServicioHttpLoginPOST extends IntentService {
     private HttpURLConnection conexionHttp;
     private URL mURL;
 
-    public ServicioHttp() {
-        super("ServicioHttpGET");
+    public ServicioHttpLoginPOST() {
+        super("ServicioHttpLoginPOST");
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i("SERVICIO_REGISTRO", "Servicio onCreate()");
+        Log.i("SERVICIO_LOGIN", "Servicio onCreate()");
     }
 
     protected void onHandleIntent(Intent intent){
@@ -51,7 +34,7 @@ public class ServicioHttp extends IntentService {
             JSONObject datosJson = new JSONObject(intent.getExtras().getString("datosJson"));
             servidorPost(uri,datosJson);
         } catch (JSONException e) {
-            Log.e("SERVICIO_REGISTRO","ERROR"+ e.toString());
+            Log.e("SERVICIO_LOGIN","ERROR"+ e.toString());
         }
 
     }
@@ -61,16 +44,15 @@ public class ServicioHttp extends IntentService {
         String result  = post (uri,datosJson);
 
         if (result == null){
-            Log.e("SERVICIO_REGISTRO","Error en GET");
+            Log.e("SERVICIO_LOGIN","Error en POST");
             return;
         }
         if (result.equals("NO_OK")){
-            //MUERE ACAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
             Log.e("aca","Se recibio una respuesta NO_OK");
             return;
         }
 
-        Intent i =new Intent("jyc.sa.intent.action.MAIN");
+        Intent i =new Intent("android.intent.action.MAIN");
         i.putExtra("datosJson", result);
         sendBroadcast(i);
 
@@ -95,14 +77,14 @@ public class ServicioHttp extends IntentService {
             conexionHttp.setConnectTimeout(5000);
             conexionHttp.setRequestMethod("POST");
             DataOutputStream wr =new DataOutputStream(conexionHttp.getOutputStream());
-            //OutputStream wr = new BufferedOutputStream(conexionHttp.getOutputStream());
             wr.write(datosJson.toString().getBytes("UTF-8"));
-            Log.i("SERVICIO_REGISTRO", "Se envia al server"+datosJson.toString());
+            Log.i("SERVICIO_LOGIN", "Se envia al server"+datosJson.toString());
             wr.flush();
             wr.close();
 
             conexionHttp.connect();
             int responseCode= conexionHttp.getResponseCode();
+
             Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.getResponseMessage());
             Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ responseCode);
             if((responseCode == conexionHttp.HTTP_OK) || (responseCode == conexionHttp.HTTP_CREATED)) {
@@ -123,29 +105,17 @@ public class ServicioHttp extends IntentService {
         return result;
     }
 
-    private String convertInputStreamToString(InputStreamReader input) throws IOException {//POSIBLE PROBLEMA
+    private String convertInputStreamToString(InputStreamReader input) throws IOException {
         Log.e("LLEGA ACA??1111","ENTRA AL CONVERT?? "+ input.toString());
         BufferedReader streamReader = new BufferedReader(input);
         StringBuilder respondStreamBuild = new StringBuilder();
         String inputStr;
         while ((inputStr = streamReader.readLine()) != null)
             respondStreamBuild.append(inputStr);
-        //  String convert = inputStreamReader.toString();
 
         Log.e("LLEGA ACA??2222","Termina el CONVERT?? "+ respondStreamBuild.toString());
 
         return respondStreamBuild.toString();
 
-         /*   ByteArrayOutputStream result = new ByteArrayOutputStream();
-            byte[] buffer = new byte[1024];
-            int length;
-            while ((length = inputStreamReader.read(buffer)) != -1) {
-                result.write(buffer, 0, length);
-            }
-
-            return result.toString(StandardCharsets.UTF_8.name());
-
-        }*/
     }
-
 }

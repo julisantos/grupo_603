@@ -1,4 +1,5 @@
 package jyc.sa.ar;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.BroadcastReceiver;
@@ -12,23 +13,17 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class RegistroActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
-    private EditText txtNombre;
-    private EditText txtApellido;
-    private EditText txtDni;
+    private Button btnLogin ;
     private EditText txtEmail;
     private EditText txtPassword;
-    private EditText txtGrupo;
-    private EditText txtComision;
-    private Button btnRegistrar;
-    public TextView txtResp;
+
     //private Handler HandlerbtnRegistrar;///POSIBLE PROBLEMA
     public IntentFilter filtro;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -37,10 +32,9 @@ public class RegistroActivity extends AppCompatActivity {
             try {
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
-                Log.i("SERVICIO_REGISTRO", "Se envia al server" + datosJsonString );
-                txtResp = (TextView) findViewById(R.id.textrespuesta);
+                Log.i("SERVICIO_LOGINEEEE", "Se envia al server" + datosJsonString );
 
-                  txtResp.setText(datosJsonString);
+                //  txtResp.setText(datosJsonString);
 
                 Toast.makeText(context.getApplicationContext(), "Se recibio respuesta del Server", Toast.LENGTH_LONG).show();
             } catch (JSONException e) {
@@ -67,45 +61,31 @@ public class RegistroActivity extends AppCompatActivity {
 
         }
     };
+    private static final String URI_LOGIN = "http://so-unlam.net.ar/api/api/login";
 
 
-    private static final String URI_REGISTRO = "http://so-unlam.net.ar/api/api/register";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState1) {
 
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_registro);
+        super.onCreate(savedInstanceState1);
+        setContentView(R.layout.activity_login);
+        btnLogin = (Button) findViewById(R.id.btnLogin);
 
-        registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-
-
-
-    txtNombre = (EditText) findViewById(R.id.txtNombre);
-        txtApellido = (EditText) findViewById(R.id.txtApellido);
-        txtDni = (EditText) findViewById(R.id.numDni);
         txtEmail = (EditText) findViewById(R.id.txtEmail);
         txtPassword = (EditText) findViewById(R.id.txtPass);
-        txtGrupo = (EditText) findViewById(R.id.numGrupo);
-        txtComision = (EditText) findViewById(R.id.numComision);
-        btnRegistrar = (Button) findViewById(R.id.btnRegistrar);
 
 
-        btnRegistrar.setOnClickListener(new View.OnClickListener() {
+        btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v1) {
                 JSONObject obj = new JSONObject();
                 try {
-                    obj.put("env", "TEST");
-                    obj.put("name", txtNombre.getText().toString());
-                    obj.put("lastname", txtApellido.getText().toString());
-                    obj.put("dni", txtDni.getText().toString());
+                    obj.put("env", "DEV");
                     obj.put("email", txtEmail.getText().toString());
                     obj.put("password", txtPassword.getText().toString());
-                    obj.put("commission", txtComision.getText().toString());
-                    obj.put("group", txtGrupo.getText().toString());
-                    Intent i = new Intent(RegistroActivity.this, ServicioHttpRegistroPOST.class);
-                    i.putExtra("uri", URI_REGISTRO);
+                    Intent i = new Intent(LoginActivity.this, ServicioHttpLoginPOST.class);
+                    i.putExtra("uri", URI_LOGIN);
                     i.putExtra("datosJson", obj.toString());
 
                     startService(i);
@@ -121,19 +101,27 @@ public class RegistroActivity extends AppCompatActivity {
     }
 
     private void configurarBroadcastReceiver() {
-        filtro=new IntentFilter("jyc.sa.intent.action.MAIN");
-        filtro.addCategory("jyc.sa.intent.category.LAUNCHER");
+        filtro=new IntentFilter("android.intent.action.MAIN");
+        filtro.addCategory("android.intent.category.LAUNCHER");
         registerReceiver(receiver, filtro);
     }
 
+/*
+        public void onReceive(Context context, Intent intent) {
+            {
+                try {
+                    String datosJsonString = intent.getStringExtra("datosJson");
+                    JSONObject datosJson = new JSONObject(datosJsonString);
+                    Log.i("SERVICIO_LOGIN", "Se envia al server" + datosJsonString + datosJson.toString());
 
-    public void accederALogin(View view) {
+                  //  txtResp.setText(datosJsonString);
 
-            startActivity(new Intent(RegistroActivity.this,LoginActivity.class));
+                    Toast.makeText(context.getApplicationContext(), "Se recibio respuesta del Server", Toast.LENGTH_LONG).show();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
 
         }
-
-
-
-
+    }*/
 }
