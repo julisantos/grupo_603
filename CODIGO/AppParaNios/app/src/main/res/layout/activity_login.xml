@@ -41,7 +41,19 @@
     android:layout_gravity="center_horizontal"
     android:paddingLeft="15dip"
     android:paddingRight="15dip"
+
     android:text="Login" />
+
+
+  <TextView
+      android:id="@+id/textrespuesta"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="25dip"
+      android:layout_marginBottom="10dip"
+      android:gravity="center"
+      android:textColor="#0b84aa"
+      android:textSize="16dip" />
 
 
 

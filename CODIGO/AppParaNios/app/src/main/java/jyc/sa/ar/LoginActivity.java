@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONException;
@@ -23,6 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin ;
     private EditText txtEmail;
     private EditText txtPassword;
+    public TextView txtResp;
 
     //private Handler HandlerbtnRegistrar;///POSIBLE PROBLEMA
     public IntentFilter filtro;
@@ -32,9 +34,10 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
-                Log.i("SERVICIO_LOGINEEEE", "Se envia al server" + datosJsonString );
+                Log.i("SERVICIO_REGISTRO", "Se envia al server" + datosJsonString );
+                txtResp = (TextView) findViewById(R.id.textrespuesta);
 
-                //  txtResp.setText(datosJsonString);
+                txtResp.setText(datosJsonString);
 
                 Toast.makeText(context.getApplicationContext(), "Se recibio respuesta del Server", Toast.LENGTH_LONG).show();
             } catch (JSONException e) {
@@ -44,18 +47,21 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
+
     private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo ni = manager.getActiveNetworkInfo();
-            onNetworkChange(ni);
+            onNetworkChange(ni,context);
         }
 
-        private void onNetworkChange(NetworkInfo networkInfo) {
+        private void onNetworkChange(NetworkInfo networkInfo, Context context) {
             if (networkInfo != null && networkInfo.isConnected() ) {
                 Log.d("MenuActivity", "CONNECTED");
             }else{
+                Toast.makeText(context.getApplicationContext(), "No hay acceso a internet", Toast.LENGTH_LONG).show();
+
                 Log.d("MenuActivity", "DISCONNECTED");
             }
 
@@ -81,7 +87,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v1) {
                 JSONObject obj = new JSONObject();
                 try {
-                    obj.put("env", "DEV");
+                    obj.put("env", "TEST");
                     obj.put("email", txtEmail.getText().toString());
                     obj.put("password", txtPassword.getText().toString());
                     Intent i = new Intent(LoginActivity.this, ServicioHttpLoginPOST.class);
@@ -90,6 +96,8 @@ public class LoginActivity extends AppCompatActivity {
 
                     startService(i);
 
+
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -97,7 +105,9 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         });
-        configurarBroadcastReceiver();/// cambiar nombre
+        configurarBroadcastReceiver();
+
+
     }
 
     private void configurarBroadcastReceiver() {
@@ -106,22 +116,5 @@ public class LoginActivity extends AppCompatActivity {
         registerReceiver(receiver, filtro);
     }
 
-/*
-        public void onReceive(Context context, Intent intent) {
-            {
-                try {
-                    String datosJsonString = intent.getStringExtra("datosJson");
-                    JSONObject datosJson = new JSONObject(datosJsonString);
-                    Log.i("SERVICIO_LOGIN", "Se envia al server" + datosJsonString + datosJson.toString());
 
-                  //  txtResp.setText(datosJsonString);
-
-                    Toast.makeText(context.getApplicationContext(), "Se recibio respuesta del Server", Toast.LENGTH_LONG).show();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-    }*/
 }

@@ -1,8 +1,10 @@
 package jyc.sa.ar;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +49,8 @@ public class ServicioHttpLoginPOST extends IntentService {
             Log.e("SERVICIO_LOGIN","Error en POST");
             return;
         }
-        if (result.equals("NO_OK")){
+
+         if (result.equals("NO_OK")){
             Log.e("aca","Se recibio una respuesta NO_OK");
             return;
         }
@@ -67,6 +70,8 @@ public class ServicioHttpLoginPOST extends IntentService {
     private String post(String uri, JSONObject datosJson) {
         HttpURLConnection conexionHttp=null;
         String result="";
+
+
 
         try {
             URL mUrl=new URL(uri);
@@ -90,9 +95,11 @@ public class ServicioHttpLoginPOST extends IntentService {
             if((responseCode == conexionHttp.HTTP_OK) || (responseCode == conexionHttp.HTTP_CREATED)) {
                 Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.toString());
                 result = convertInputStreamToString(new InputStreamReader(conexionHttp.getInputStream()));
-
             }else {
                 result = "NO_OK";
+
+                Toast.makeText(this, "El/los campo/s ingresados es incorrecto", Toast.LENGTH_LONG).show();
+
                 Log.i("ACA", "La uri:" +uri);
                 Log.i("ACA", "Se murio");
             }

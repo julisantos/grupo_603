@@ -55,14 +55,16 @@ public class RegistroActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo ni = manager.getActiveNetworkInfo();
-            onNetworkChange(ni);
+            onNetworkChange(ni, context);
         }
 
-        private void onNetworkChange(NetworkInfo networkInfo) {
+        private void onNetworkChange(NetworkInfo networkInfo, Context context) {
             if (networkInfo != null && networkInfo.isConnected() ) {
                 Log.d("MenuActivity", "CONNECTED");
             }else{
                 Log.d("MenuActivity", "DISCONNECTED");
+                Toast.makeText(context.getApplicationContext(), "No hay acceso a internet", Toast.LENGTH_LONG).show();
+
             }
 
         }
@@ -81,7 +83,7 @@ public class RegistroActivity extends AppCompatActivity {
 
 
 
-    txtNombre = (EditText) findViewById(R.id.txtNombre);
+        txtNombre = (EditText) findViewById(R.id.txtNombre);
         txtApellido = (EditText) findViewById(R.id.txtApellido);
         txtDni = (EditText) findViewById(R.id.numDni);
         txtEmail = (EditText) findViewById(R.id.txtEmail);
@@ -91,32 +93,40 @@ public class RegistroActivity extends AppCompatActivity {
         btnRegistrar = (Button) findViewById(R.id.btnRegistrar);
 
 
+
         btnRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
+
+
             public void onClick(View v) {
-                JSONObject obj = new JSONObject();
-                try {
-                    obj.put("env", "TEST");
-                    obj.put("name", txtNombre.getText().toString());
-                    obj.put("lastname", txtApellido.getText().toString());
-                    obj.put("dni", txtDni.getText().toString());
-                    obj.put("email", txtEmail.getText().toString());
-                    obj.put("password", txtPassword.getText().toString());
-                    obj.put("commission", txtComision.getText().toString());
-                    obj.put("group", txtGrupo.getText().toString());
-                    Intent i = new Intent(RegistroActivity.this, ServicioHttpRegistroPOST.class);
-                    i.putExtra("uri", URI_REGISTRO);
-                    i.putExtra("datosJson", obj.toString());
 
-                    startService(i);
+                if (esValido()) {
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                    JSONObject obj = new JSONObject();
+
+                    try {
+                        obj.put("env", "TEST");
+                        obj.put("name", txtNombre.getText().toString());
+                        obj.put("lastname", txtApellido.getText().toString());
+                        obj.put("dni", txtDni.getText().toString());
+                        obj.put("email", txtEmail.getText().toString());
+                        obj.put("password", txtPassword.getText().toString());
+                        obj.put("commission", txtComision.getText().toString());
+                        obj.put("group", txtGrupo.getText().toString());
+                        Intent i = new Intent(RegistroActivity.this, ServicioHttpRegistroPOST.class);
+                        i.putExtra("uri", URI_REGISTRO);
+                        i.putExtra("datosJson", obj.toString());
+
+                        startService(i);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
 
             }
-
         });
+
         configurarBroadcastReceiver();/// cambiar nombre
     }
 
@@ -135,5 +145,51 @@ public class RegistroActivity extends AppCompatActivity {
 
 
 
+    public boolean esValido() {
 
+        String campNombre = txtNombre.getText().toString();
+        String campApellido = txtApellido.getText().toString();
+        String campDni = txtDni.getText().toString();
+        String campEmail = txtEmail.getText().toString();
+        String campPass = txtPassword.getText().toString();
+        String campComi = txtComision.getText().toString();
+        String campGrupo = txtGrupo.getText().toString();
+        boolean valido = true;
+        if(campNombre.isEmpty()){
+
+            txtNombre.setError("Debe ingresar su nombre para registrarse");
+            valido = false;
+        }
+        if(campApellido.isEmpty()){
+
+            txtApellido.setError("Debe ingresar su apellido para registrarse");
+            valido = false;
+        }
+
+        if(campDni.isEmpty() || campDni.length()>8){
+
+            txtDni.setError("Numero de dni incorrecto,recuerde que no debe superar los 8 caracteres");
+            valido = false;
+        }
+
+        if(campEmail.isEmpty()){
+            txtEmail.setError("Debe ingresar su E-mal para registrarse");
+            valido = false;
+        }
+        if(campPass.isEmpty() || campPass.length()<8){
+            txtPassword.setError("Campo password incorrecto, recuerde ingresar 8 caracteres o mas");
+            valido = false;
+        }
+
+        if(campComi.isEmpty()){
+            txtComision.setError("Debe ingresar la comision para registrarse");
+            valido = false;
+        }
+
+        if(campGrupo.isEmpty()){
+            txtGrupo.setError("Debe ingresar su numero de grupo para registrarse");
+            valido = false;
+        }
+        return valido;
+    }
 }
