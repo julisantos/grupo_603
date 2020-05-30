@@ -12,6 +12,7 @@ import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+import android.hardware.SensorEventListener2;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -26,15 +27,16 @@ import android.widget.Toast;
 import java.nio.file.Files;
 import java.util.Random;
 
-public class JuegoActivity extends AppCompatActivity implements SensorEventListener {
+public class JuegoActivity extends AppCompatActivity {
 
     ImageView imgVocal;
     String vocalImg;
     int cantCorrectas=0;
     int cantIncorrectas=0;
     LinearLayout juego;
-    SensorManager sm;
-    Sensor sensor;
+    SensorManager smprox,smacel;
+    Sensor sensorprox,sensoracel;
+    SensorEventListener sensorEventListeneracel,sensorEventListenerprox;
 
     private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
         @Override
@@ -61,15 +63,40 @@ public class JuegoActivity extends AppCompatActivity implements SensorEventListe
         setContentView(R.layout.activity_main);
 
         juego = (LinearLayout)findViewById(R.id.activitySeleccionarLetra);
-        sm = (SensorManager)getSystemService(SENSOR_SERVICE);
+        smprox = (SensorManager)getSystemService(SENSOR_SERVICE);
+        sensorprox = smprox.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+
+        smacel = (SensorManager)getSystemService(SENSOR_SERVICE);
+        sensoracel = smacel.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 
         imgVocal = (ImageView) findViewById(R.id.imageObj);
         generarImgRandom();
 
-        sensor = sm.getDefaultSensor(Sensor.TYPE_PROXIMITY);
-        sm.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        sensorAcelerometroCambiarImg();
+
+        sensorProximidadMostrarResultados();
+
+        activarSensores();
+
+
 
     }
+
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        desactivarSensores();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        activarSensores();
+
+    }
+
+
 
     public void seleccionarVocal(View view) {
         switch (view.getId()){
@@ -122,19 +149,59 @@ public class JuegoActivity extends AppCompatActivity implements SensorEventListe
         }
     }
 
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        Float valorProximidad = Float.valueOf(event.values[0]);
-        if(valorProximidad == 0){
-            Intent isensorProx = new Intent(JuegoActivity.this,ScoreActivity.class);
-            isensorProx.putExtra("cantAciertos",String.valueOf(cantCorrectas));
-            isensorProx.putExtra("cantDesaciertos",String.valueOf(cantIncorrectas));
-            startActivity(isensorProx);
-        }
+    private void sensorProximidadMostrarResultados() {
+        sensorEventListenerprox = new SensorEventListener() {
+
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                Float valorProximidad = Float.valueOf(event.values[0]);
+                if(valorProximidad == 0){
+                    Intent isensorProx = new Intent(JuegoActivity.this, ScoreActivity.class);
+                    isensorProx.putExtra("cantAciertos",String.valueOf(cantCorrectas));
+                    isensorProx.putExtra("cantDesaciertos",String.valueOf(cantIncorrectas));
+                    startActivity(isensorProx);
+                }
+
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+        };
     }
 
-    @Override
-    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+    private void sensorAcelerometroCambiarImg() {
+        sensorEventListeneracel = new SensorEventListener() {
+            @Override
+            public void onSensorChanged(SensorEvent event) {
+                float ejeX = event.values[0];
+                float ejeY = event.values[1];
+                float ejeZ = event.values[2];
+                if(ejeX<-8 || ejeX>8 || ejeY<-8 || ejeY>8 || ejeY<-8 || ejeY>8){
+                    generarImgRandom();
+
+                }
+            }
+
+            @Override
+            public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+            }
+        };
+    }
+
+    private void activarSensores()
+    {
+        smacel.registerListener(sensorEventListeneracel,sensoracel,SensorManager.SENSOR_DELAY_NORMAL);
+        smprox.registerListener(sensorEventListenerprox, sensorprox, SensorManager.SENSOR_DELAY_NORMAL);
+
 
     }
+    private void desactivarSensores()
+    {
+        smacel.unregisterListener(sensorEventListeneracel);
+        smprox.unregisterListener(sensorEventListenerprox);
+    }
+
 }
