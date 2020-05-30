@@ -96,6 +96,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     startService(i);
 
+                    startActivity(new Intent(LoginActivity.this,JuegoActivity.class));
 
 
                 } catch (JSONException e) {

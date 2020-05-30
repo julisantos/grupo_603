@@ -1,16 +1,17 @@
 package jyc.sa.ar;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
+import android.widget.TextView;
 
 public class ScoreActivity extends AppCompatActivity implements SensorEventListener {
-
 
     private SensorManager adminSensores;
     private static final int UMBRAL_SACUDIDA = 250;
@@ -22,6 +23,9 @@ public class ScoreActivity extends AppCompatActivity implements SensorEventListe
     private float ultimoX;
     private float ultimoY;
     private float ultimoZ;
+    private TextView tvAciertos;
+    private TextView tvDesaciertos;
+
     private Boolean isFirstTime = true, hasSwiped = false;
 
     AlertDialog dialog;
@@ -35,13 +39,16 @@ public class ScoreActivity extends AppCompatActivity implements SensorEventListe
 
         super.onCreate(savedInstanceState);
 
-        /*********ESTO NO FUNCIONA NO SE POR QUÉ******************
-        setContentView(R.layout.activity_score);
-        *********************************************************/
+         setContentView(R.layout.activity_score);
+
+         tvAciertos = (TextView)findViewById(R.id.textAciertos);
+         tvDesaciertos = (TextView)findViewById(R.id.textDesaciertos);
+         recibirYsetiarAciertosYDesaciertos();
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage("Proxima imagen").setTitle("Saltear imagen");
         dialog = builder.create();
+
 
         adminSensores = (SensorManager) getSystemService(SENSOR_SERVICE);
         inicializarSensores();
@@ -109,7 +116,7 @@ public class ScoreActivity extends AppCompatActivity implements SensorEventListe
             velocidad = Math.abs(aceleracionActual - aceleracionAnterior) / diferenciaDeTiempo * 10000;
 
             if (velocidad > UMBRAL_SACUDIDA) {
-               //***************PASAR A PROXIMA IMAGEN******************
+                //***************PASAR A PROXIMA IMAGEN******************
             }
 
             this.ultimoX = x;
@@ -152,4 +159,17 @@ public class ScoreActivity extends AppCompatActivity implements SensorEventListe
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
+
+    private  void recibirYsetiarAciertosYDesaciertos()
+    {
+        Bundle extras = getIntent().getExtras();
+        String desaciertos = extras.getString("cantDesaciertos");
+        String aciertos = extras.getString("cantAciertos");
+        tvAciertos.setText(aciertos);
+        tvDesaciertos.setText(desaciertos);
+        tvAciertos.setTextColor(Color.GREEN);
+        tvDesaciertos.setTextColor(Color.RED);
+
+    }
+
 }

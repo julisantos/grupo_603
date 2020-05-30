@@ -3,10 +3,16 @@ package jyc.sa.ar;
 import androidx.annotation.InspectableProperty;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -14,17 +20,21 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import java.nio.file.Files;
 import java.util.Random;
 
-public class JuegoActivity extends AppCompatActivity {
+public class JuegoActivity extends AppCompatActivity implements SensorEventListener {
 
     ImageView imgVocal;
     String vocalImg;
     int cantCorrectas=0;
     int cantIncorrectas=0;
+    LinearLayout juego;
+    SensorManager sm;
+    Sensor sensor;
 
     private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
         @Override
@@ -32,6 +42,7 @@ public class JuegoActivity extends AppCompatActivity {
             ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo ni = manager.getActiveNetworkInfo();
             onNetworkChange(ni);
+
         }
 
         private void onNetworkChange(NetworkInfo networkInfo) {
@@ -49,8 +60,15 @@ public class JuegoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        juego = (LinearLayout)findViewById(R.id.activitySeleccionarLetra);
+        sm = (SensorManager)getSystemService(SENSOR_SERVICE);
+
         imgVocal = (ImageView) findViewById(R.id.imageObj);
         generarImgRandom();
+
+        sensor = sm.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        sm.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+
     }
 
     public void seleccionarVocal(View view) {
@@ -102,5 +120,21 @@ public class JuegoActivity extends AppCompatActivity {
             cantIncorrectas++;
             //Toast.makeText(this, "Cantidad de respuestas incorrectas: "+cantIncorrectas, Toast.LENGTH_LONG).show();
         }
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        Float valorProximidad = Float.valueOf(event.values[0]);
+        if(valorProximidad == 0){
+            Intent isensorProx = new Intent(JuegoActivity.this,ScoreActivity.class);
+            isensorProx.putExtra("cantAciertos",String.valueOf(cantCorrectas));
+            isensorProx.putExtra("cantDesaciertos",String.valueOf(cantIncorrectas));
+            startActivity(isensorProx);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }
