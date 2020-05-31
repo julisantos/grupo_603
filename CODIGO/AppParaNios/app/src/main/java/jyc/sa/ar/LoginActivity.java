@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -37,11 +38,10 @@ public class LoginActivity extends AppCompatActivity {
                 JSONObject datosJson = new JSONObject(datosJsonString);
                 Log.i("SERVICIO_LOGIN", "Se recibe del server" + datosJsonString );
                 txtResp = (TextView) findViewById(R.id.textrespuesta);
-
                 txtResp.setText(datosJsonString);
                 token= datosJson.getString("token");
 
-                Log.i("aca bien", "Se rompe despues del token" +intent.getStringExtra("token") );
+                Log.i("aca bien", "Se rompe despues del token555" +intent.getStringExtra("token") );
                 //enviarIntent();
                 //sendBroadcast(i);
 
@@ -53,14 +53,7 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-    private void enviarIntent() {
 
-        Intent i= new Intent(LoginActivity.this, JuegoActivity.class);
-        i.putExtra("token", token);
-        Log.i("aca", "Se rompe despues del token " +token);
-
-        startActivity(i);
-    }
 
 
     private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
@@ -110,7 +103,16 @@ public class LoginActivity extends AppCompatActivity {
                     i.putExtra("datosJson", obj.toString());
 
                     startService(i);
-                    enviarIntent();
+
+
+                   Handler handler = new Handler();
+
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            enviarIntent();
+
+                        }
+                    }, 2000);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -119,9 +121,18 @@ public class LoginActivity extends AppCompatActivity {
             }
 
         });
+
         configurarBroadcastReceiver();
 
 
+    }
+
+    private void enviarIntent() {
+            Intent i = new Intent(LoginActivity.this, JuegoActivity.class);
+            i.putExtra("token", token);
+            Log.i("aca", "Se rompe despues del token " + token);
+
+            startActivity(i);
     }
 
     private void configurarBroadcastReceiver() {

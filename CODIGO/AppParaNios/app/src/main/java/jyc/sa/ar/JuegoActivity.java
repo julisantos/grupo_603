@@ -64,21 +64,13 @@ public class JuegoActivity extends AppCompatActivity {
         }
     };
 
-    private BroadcastReceiver tokenReceive = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            token = intent.getStringExtra("token");
-            Log.i("aca", "token recibido "+token);
-        }
-
-    };
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+        informarEvento("login","ACTIVO","El usuario se encuentra logueado al sistema");
 
 
         juego = (LinearLayout)findViewById(R.id.activitySeleccionarLetra);
@@ -92,24 +84,46 @@ public class JuegoActivity extends AppCompatActivity {
         generarImgRandom();
 
         sensorAcelerometroCambiarImg();
-
         sensorProximidadMostrarResultados();
-
         activarSensores();
+
+
+
+
 
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        informarEvento("login","INACTIVO","El usuario cerro la aplicacion");
+
+    }
 
     @Override
     protected void onPause() {
         super.onPause();
         desactivarSensores();
+
+
+
+
+        informarEvento("sensorAcelerometro","INACTIVO","se activo el sensor acelerometro");
+        informarEvento("sensorProximidad","INACTIVO","se activo el sensor de proximidad");
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         activarSensores();
+
+
+
+        informarEvento("sensorAcelerometro","ACTIVO","se activo el sensor acelerometro");
+        informarEvento("sensorProximidad","ACTIVO","se activo el sensor de proximidad");
+
 
     }
 
@@ -210,10 +224,14 @@ public class JuegoActivity extends AppCompatActivity {
 
     private void activarSensores()
     {
-        smacel.registerListener(sensorEventListeneracel,sensoracel,SensorManager.SENSOR_DELAY_NORMAL);
-        smprox.registerListener(sensorEventListenerprox, sensorprox, SensorManager.SENSOR_DELAY_NORMAL);
-        informarEvento("sensorAcelerometro","ACTIVO","se activo el sensor acelerometro");
-        informarEvento("sensorProximidad","ACTIVO","se activo el sensor de proximidad");
+
+
+
+                smacel.registerListener(sensorEventListeneracel,sensoracel,SensorManager.SENSOR_DELAY_NORMAL);
+                smprox.registerListener(sensorEventListenerprox, sensorprox, SensorManager.SENSOR_DELAY_NORMAL);
+
+
+
 
 
     }
@@ -221,8 +239,7 @@ public class JuegoActivity extends AppCompatActivity {
     {
         smacel.unregisterListener(sensorEventListeneracel);
         smprox.unregisterListener(sensorEventListenerprox);
-        informarEvento("sensorAcelerometro","INACTIVO","se activo el sensor acelerometro");
-        informarEvento("sensorProximidad","INACTIVO","se activo el sensor de proximidad");
+
     }
 
     private void informarEvento(String tipoEvento,  String estado, String descripcion){

@@ -37,7 +37,8 @@ public class RegistroActivity extends AppCompatActivity {
             try {
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
-                Log.i("SERVICIO_REGISTRO", "Se envia al server" + datosJsonString );
+
+                Log.i("SERVICIO", "Se recibe del server" + datosJsonString );
                 txtResp = (TextView) findViewById(R.id.textrespuesta);
 
                   txtResp.setText(datosJsonString);
@@ -49,6 +50,12 @@ public class RegistroActivity extends AppCompatActivity {
 
         }
     };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
 
     private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
         @Override
@@ -140,7 +147,6 @@ public class RegistroActivity extends AppCompatActivity {
     public void accederALogin(View view) {
 
             startActivity(new Intent(RegistroActivity.this,LoginActivity.class));
-
         }
 
 

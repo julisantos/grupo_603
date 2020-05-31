@@ -88,10 +88,10 @@ public class ServicioHttpEvento extends IntentService {
             conexionHttp.connect();
 
             int responseCode= conexionHttp.getResponseCode();
-            Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.getResponseMessage());
-            Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ responseCode);
+           // Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.getResponseMessage());
+           // Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ responseCode);
             if((responseCode == conexionHttp.HTTP_OK) || (responseCode == conexionHttp.HTTP_CREATED)) {
-                Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.toString());
+            //    Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.toString());
                 result = convertInputStreamToString(new InputStreamReader(conexionHttp.getInputStream()));
 
             }else {
@@ -109,14 +109,14 @@ public class ServicioHttpEvento extends IntentService {
     }
 
     private String convertInputStreamToString(InputStreamReader input) throws IOException {
-        Log.e("LLEGA ACA??1111","ENTRA AL CONVERT?? "+ input.toString());
+      //  Log.e("LLEGA ACA??1111","ENTRA AL CONVERT?? "+ input.toString());
         BufferedReader streamReader = new BufferedReader(input);
         StringBuilder respondStreamBuild = new StringBuilder();
         String inputStr;
         while ((inputStr = streamReader.readLine()) != null)
             respondStreamBuild.append(inputStr);
 
-        Log.e("LLEGA ACA??2222","Termina el CONVERT?? "+ respondStreamBuild.toString());
+      //  Log.e("LLEGA ACA??2222","Termina el CONVERT?? "+ respondStreamBuild.toString());
 
         return respondStreamBuild.toString();
     }
