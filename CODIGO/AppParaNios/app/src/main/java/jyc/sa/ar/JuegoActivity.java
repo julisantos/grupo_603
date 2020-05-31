@@ -7,6 +7,7 @@ import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -18,11 +19,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.nio.file.Files;
 import java.util.Random;
@@ -33,6 +38,8 @@ public class JuegoActivity extends AppCompatActivity {
     String vocalImg;
     int cantCorrectas=0;
     int cantIncorrectas=0;
+    String token="";
+    public IntentFilter filtro;
     LinearLayout juego;
     SensorManager smprox,smacel;
     Sensor sensorprox,sensoracel;
@@ -57,10 +64,22 @@ public class JuegoActivity extends AppCompatActivity {
         }
     };
 
+    private BroadcastReceiver tokenReceive = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            token = intent.getStringExtra("token");
+            Log.i("aca", "token recibido "+token);
+        }
+
+    };
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
+
 
         juego = (LinearLayout)findViewById(R.id.activitySeleccionarLetra);
         smprox = (SensorManager)getSystemService(SENSOR_SERVICE);
@@ -77,8 +96,6 @@ public class JuegoActivity extends AppCompatActivity {
         sensorProximidadMostrarResultados();
 
         activarSensores();
-
-
 
     }
 
@@ -137,13 +154,13 @@ public class JuegoActivity extends AppCompatActivity {
     private void compararConImg(String vocal) {
 
         if(vocal.equals(vocalImg)) {
-            Toast.makeText(this, "Respuesta Correcta el animal de la imagen empieza con " + vocalImg, Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "Respuesta Correcta el animal de la imagen empieza con " + vocalImg, Toast.LENGTH_LONG).show();
             cantCorrectas++;
             //Toast.makeText(this, "Cantidad de respuestas correctas: "+cantCorrectas, Toast.LENGTH_LONG).show();
             generarImgRandom();
 
         } else {
-            Toast.makeText(this,"Respuesta Incorrecta el animal de la imagen empieza con "+ vocalImg,Toast.LENGTH_LONG).show();
+            //Toast.makeText(this,"Respuesta Incorrecta el animal de la imagen empieza con "+ vocalImg,Toast.LENGTH_LONG).show();
             cantIncorrectas++;
             //Toast.makeText(this, "Cantidad de respuestas incorrectas: "+cantIncorrectas, Toast.LENGTH_LONG).show();
         }
@@ -171,7 +188,7 @@ public class JuegoActivity extends AppCompatActivity {
         };
     }
 
-    private void sensorAcelerometroCambiarImg() {
+    private void  sensorAcelerometroCambiarImg() {
         sensorEventListeneracel = new SensorEventListener() {
             @Override
             public void onSensorChanged(SensorEvent event) {
@@ -195,6 +212,8 @@ public class JuegoActivity extends AppCompatActivity {
     {
         smacel.registerListener(sensorEventListeneracel,sensoracel,SensorManager.SENSOR_DELAY_NORMAL);
         smprox.registerListener(sensorEventListenerprox, sensorprox, SensorManager.SENSOR_DELAY_NORMAL);
+        informarEvento("sensorAcelerometro","ACTIVO","se activo el sensor acelerometro");
+        informarEvento("sensorProximidad","ACTIVO","se activo el sensor de proximidad");
 
 
     }
@@ -202,6 +221,35 @@ public class JuegoActivity extends AppCompatActivity {
     {
         smacel.unregisterListener(sensorEventListeneracel);
         smprox.unregisterListener(sensorEventListenerprox);
+        informarEvento("sensorAcelerometro","INACTIVO","se activo el sensor acelerometro");
+        informarEvento("sensorProximidad","INACTIVO","se activo el sensor de proximidad");
+    }
+
+    private void informarEvento(String tipoEvento,  String estado, String descripcion){
+
+        //VALIDAR SI PUDO CONECTARSE AL SERVIDOR ANTES DE HACER ESTO
+        Bundle extras = getIntent().getExtras();
+        String token = extras.getString("token");
+
+        JSONObject obj = new JSONObject();
+        try {
+            obj.put("env", "DEV");
+            obj.put("type_events", tipoEvento);
+            obj.put("state", estado);
+            obj.put("description", descripcion);
+            Intent i = new Intent(JuegoActivity.this, ServicioHttpEvento.class);
+            i.putExtra("uri", "http://so-unlam.net.ar/api/api/event");
+            i.putExtra("token", token);
+            i.putExtra("datosJson", obj.toString());
+
+            startService(i);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+
     }
 
 }
+

@@ -25,19 +25,25 @@ public class LoginActivity extends AppCompatActivity {
     private EditText txtEmail;
     private EditText txtPassword;
     public TextView txtResp;
+    public String token="";
 
-    //private Handler HandlerbtnRegistrar;///POSIBLE PROBLEMA
     public IntentFilter filtro;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
+
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
-                Log.i("SERVICIO_REGISTRO", "Se envia al server" + datosJsonString );
+                Log.i("SERVICIO_LOGIN", "Se recibe del server" + datosJsonString );
                 txtResp = (TextView) findViewById(R.id.textrespuesta);
 
                 txtResp.setText(datosJsonString);
+                token= datosJson.getString("token");
+
+                Log.i("aca bien", "Se rompe despues del token" +intent.getStringExtra("token") );
+                //enviarIntent();
+                //sendBroadcast(i);
 
                 Toast.makeText(context.getApplicationContext(), "Se recibio respuesta del Server", Toast.LENGTH_LONG).show();
             } catch (JSONException e) {
@@ -46,6 +52,15 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     };
+
+    private void enviarIntent() {
+
+        Intent i= new Intent(LoginActivity.this, JuegoActivity.class);
+        i.putExtra("token", token);
+        Log.i("aca", "Se rompe despues del token " +token);
+
+        startActivity(i);
+    }
 
 
     private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
@@ -87,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v1) {
                 JSONObject obj = new JSONObject();
                 try {
-                    obj.put("env", "TEST");
+                    obj.put("env", "DEV");
                     obj.put("email", txtEmail.getText().toString());
                     obj.put("password", txtPassword.getText().toString());
                     Intent i = new Intent(LoginActivity.this, ServicioHttpLoginPOST.class);
@@ -95,9 +110,7 @@ public class LoginActivity extends AppCompatActivity {
                     i.putExtra("datosJson", obj.toString());
 
                     startService(i);
-
-                    startActivity(new Intent(LoginActivity.this,JuegoActivity.class));
-
+                    enviarIntent();
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -116,6 +129,10 @@ public class LoginActivity extends AppCompatActivity {
         filtro.addCategory("android.intent.category.LAUNCHER");
         registerReceiver(receiver, filtro);
     }
+
+
+
+
 
 
 }

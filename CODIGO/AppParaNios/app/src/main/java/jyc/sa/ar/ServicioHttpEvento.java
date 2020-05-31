@@ -18,7 +18,7 @@ public class ServicioHttpEvento extends IntentService {
 
     private HttpURLConnection conexionHttp;
     private URL mURL;
-
+    private String token="";
     public ServicioHttpEvento() {
         super("ServicioHttpEvento");
     }
@@ -32,6 +32,7 @@ public class ServicioHttpEvento extends IntentService {
     protected void onHandleIntent(Intent intent){
         try {
             String uri = intent.getExtras().getString("uri");
+            token = intent.getExtras().getString("token");
             JSONObject datosJson = new JSONObject(intent.getExtras().getString("datosJson"));
             servidorPost(uri,datosJson);
         } catch (JSONException e) {
@@ -56,8 +57,6 @@ public class ServicioHttpEvento extends IntentService {
         Intent i =new Intent("jyc.sa.intent.action.MAIN");
         i.putExtra("datosJson", result);
         sendBroadcast(i);
-
-
     }
 
     @Override
@@ -68,11 +67,13 @@ public class ServicioHttpEvento extends IntentService {
     private String post(String uri, JSONObject datosJson) {
         HttpURLConnection conexionHttp=null;
         String result="";
+        Log.i("aca","TOKEN DEL POST "+token);
 
         try {
             URL mUrl=new URL(uri);
             conexionHttp = (HttpURLConnection) mUrl.openConnection();
             conexionHttp.setRequestProperty("Content-Type","application/json; charset=UTF-8");
+            conexionHttp.setRequestProperty("token", token);
             conexionHttp.setDoOutput(true);
             conexionHttp.setDoInput(true);
             conexionHttp.setConnectTimeout(5000);
@@ -85,6 +86,7 @@ public class ServicioHttpEvento extends IntentService {
             wr.close();
 
             conexionHttp.connect();
+
             int responseCode= conexionHttp.getResponseCode();
             Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.getResponseMessage());
             Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ responseCode);
