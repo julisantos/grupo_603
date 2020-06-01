@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -38,8 +39,6 @@ public class JuegoActivity extends AppCompatActivity {
     String vocalImg;
     int cantCorrectas=0;
     int cantIncorrectas=0;
-    String token="";
-    public IntentFilter filtro;
     LinearLayout juego;
     SensorManager smprox,smacel;
     Sensor sensorprox,sensoracel;
@@ -50,17 +49,16 @@ public class JuegoActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo ni = manager.getActiveNetworkInfo();
-            onNetworkChange(ni);
-
+            onNetworkChange(ni, context);
         }
 
-        private void onNetworkChange(NetworkInfo networkInfo) {
+        private void onNetworkChange(NetworkInfo networkInfo, Context context) {
             if (networkInfo != null && networkInfo.isConnected() ) {
                 Log.d("MenuActivity", "CONNECTED");
             }else{
                 Log.d("MenuActivity", "DISCONNECTED");
+                Toast.makeText(context.getApplicationContext(), "ATENCION! No hay acceso a internet", Toast.LENGTH_LONG).show();
             }
-
         }
     };
 
@@ -224,27 +222,18 @@ public class JuegoActivity extends AppCompatActivity {
 
     private void activarSensores()
     {
-
-
-
-                smacel.registerListener(sensorEventListeneracel,sensoracel,SensorManager.SENSOR_DELAY_NORMAL);
-                smprox.registerListener(sensorEventListenerprox, sensorprox, SensorManager.SENSOR_DELAY_NORMAL);
-
-
-
-
-
+        smacel.registerListener(sensorEventListeneracel,sensoracel,SensorManager.SENSOR_DELAY_NORMAL);
+        smprox.registerListener(sensorEventListenerprox, sensorprox, SensorManager.SENSOR_DELAY_NORMAL);
     }
+
     private void desactivarSensores()
     {
         smacel.unregisterListener(sensorEventListeneracel);
         smprox.unregisterListener(sensorEventListenerprox);
-
     }
 
     private void informarEvento(String tipoEvento,  String estado, String descripcion){
 
-        //VALIDAR SI PUDO CONECTARSE AL SERVIDOR ANTES DE HACER ESTO
         Bundle extras = getIntent().getExtras();
         String token = extras.getString("token");
 
@@ -261,12 +250,33 @@ public class JuegoActivity extends AppCompatActivity {
 
             startService(i);
 
+            guardarEnPreferences(obj.toString());
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
+    }
+
+    private void guardarEnPreferences(String datosEvento){
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences("HistorialEventosPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        int cantEventos=pref.getInt("cantEventos", 0);
+        cantEventos++;
+
+        String datos="IdEvento "+String.valueOf(cantEventos) + datosEvento;
+        editor.putInt("cantEventos", cantEventos);
+        editor.putString("key"+String.valueOf(cantEventos), datos);
+        editor.commit();
 
     }
 
+    public void irAEventos(View view) {
+        startActivity(new Intent(JuegoActivity.this,EventosActivity.class));
+    }
 }
+
+
 

@@ -3,6 +3,7 @@ package jyc.sa.ar;
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,6 +52,7 @@ public class ServicioHttpEvento extends IntentService {
         }
         if (result.equals("NO_OK")){
             Log.e("aca","Se recibio una respuesta NO_OK");
+            Toast.makeText(this, "ATENCIÓN! Falló la conexión al servidor", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -67,7 +69,7 @@ public class ServicioHttpEvento extends IntentService {
     private String post(String uri, JSONObject datosJson) {
         HttpURLConnection conexionHttp=null;
         String result="";
-        Log.i("aca","TOKEN DEL POST "+token);
+        //Log.i("aca","TOKEN DEL POST "+token);
 
         try {
             URL mUrl=new URL(uri);

@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText txtPassword;
     public TextView txtResp;
     public String token="";
+    public String respuestaBad="";
 
     public IntentFilter filtro;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -37,15 +38,11 @@ public class LoginActivity extends AppCompatActivity {
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
                 Log.i("SERVICIO_LOGIN", "Se recibe del server" + datosJsonString );
+
                 txtResp = (TextView) findViewById(R.id.textrespuesta);
                 txtResp.setText(datosJsonString);
                 token= datosJson.getString("token");
 
-                Log.i("aca bien", "Se rompe despues del token555" +intent.getStringExtra("token") );
-                //enviarIntent();
-                //sendBroadcast(i);
-
-                Toast.makeText(context.getApplicationContext(), "Se recibio respuesta del Server", Toast.LENGTH_LONG).show();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -61,20 +58,21 @@ public class LoginActivity extends AppCompatActivity {
         public void onReceive(Context context, Intent intent) {
             ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo ni = manager.getActiveNetworkInfo();
-            onNetworkChange(ni,context);
+            onNetworkChange(ni, context);
         }
 
         private void onNetworkChange(NetworkInfo networkInfo, Context context) {
             if (networkInfo != null && networkInfo.isConnected() ) {
                 Log.d("MenuActivity", "CONNECTED");
             }else{
-                Toast.makeText(context.getApplicationContext(), "No hay acceso a internet", Toast.LENGTH_LONG).show();
-
                 Log.d("MenuActivity", "DISCONNECTED");
+                Toast.makeText(context.getApplicationContext(), "ATENCION! No hay acceso a internet", Toast.LENGTH_LONG).show();
+
             }
 
         }
     };
+
     private static final String URI_LOGIN = "http://so-unlam.net.ar/api/api/login";
 
 
@@ -104,15 +102,14 @@ public class LoginActivity extends AppCompatActivity {
 
                     startService(i);
 
+                        Handler handler = new Handler();
 
-                   Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                enviarIntent();
 
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            enviarIntent();
-
-                        }
-                    }, 2000);
+                            }
+                        }, 2000);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -130,7 +127,7 @@ public class LoginActivity extends AppCompatActivity {
     private void enviarIntent() {
             Intent i = new Intent(LoginActivity.this, JuegoActivity.class);
             i.putExtra("token", token);
-            Log.i("aca", "Se rompe despues del token " + token);
+            //Log.i("aca", "Se rompe despues del token " + token);
 
             startActivity(i);
     }

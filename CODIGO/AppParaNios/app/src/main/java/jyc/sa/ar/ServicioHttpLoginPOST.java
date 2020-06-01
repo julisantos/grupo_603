@@ -52,13 +52,15 @@ public class ServicioHttpLoginPOST extends IntentService {
 
          if (result.equals("NO_OK")){
             Log.e("aca","Se recibio una respuesta NO_OK");
-            return;
+            Toast.makeText(this, "ATENCIÓN! Falló la conexión al servidor", Toast.LENGTH_LONG).show();
+             Intent i =new Intent("android.intent.action.MAIN");
+             i.putExtra("datosJson", result);
+             sendBroadcast(i);
         }
 
         Intent i =new Intent("android.intent.action.MAIN");
         i.putExtra("datosJson", result);
         sendBroadcast(i);
-
 
     }
 
@@ -70,8 +72,6 @@ public class ServicioHttpLoginPOST extends IntentService {
     private String post(String uri, JSONObject datosJson) {
         HttpURLConnection conexionHttp=null;
         String result="";
-
-
 
         try {
             URL mUrl=new URL(uri);
@@ -90,10 +90,8 @@ public class ServicioHttpLoginPOST extends IntentService {
             conexionHttp.connect();
             int responseCode= conexionHttp.getResponseCode();
 
-            Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.getResponseMessage());
-            Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ responseCode);
+
             if((responseCode == conexionHttp.HTTP_OK) || (responseCode == conexionHttp.HTTP_CREATED)) {
-                Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.toString());
                 result = convertInputStreamToString(new InputStreamReader(conexionHttp.getInputStream()));
             }else {
                 result = "NO_OK";

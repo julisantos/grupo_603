@@ -70,7 +70,7 @@ public class RegistroActivity extends AppCompatActivity {
                 Log.d("MenuActivity", "CONNECTED");
             }else{
                 Log.d("MenuActivity", "DISCONNECTED");
-                Toast.makeText(context.getApplicationContext(), "No hay acceso a internet", Toast.LENGTH_LONG).show();
+                Toast.makeText(context.getApplicationContext(), "ATENCION! No hay acceso a internet", Toast.LENGTH_LONG).show();
 
             }
 

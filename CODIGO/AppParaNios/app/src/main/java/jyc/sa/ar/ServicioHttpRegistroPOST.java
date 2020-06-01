@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
@@ -65,6 +66,7 @@ public class ServicioHttpRegistroPOST extends IntentService {
         }
         if (result.equals("NO_OK")){
             Log.e("aca","Se recibio una respuesta NO_OK");
+            Toast.makeText(this, "ATENCIÓN! Falló la conexión al servidor", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -109,6 +111,7 @@ public class ServicioHttpRegistroPOST extends IntentService {
 
             }else {
                 result = "NO_OK";
+                 Toast.makeText(this, "ATENCIÓN! Falló la conexión al servidor", Toast.LENGTH_LONG).show();
                 Log.i("ACA", "La uri:" +uri);
                 Log.i("ACA", "Se murio");
             }
