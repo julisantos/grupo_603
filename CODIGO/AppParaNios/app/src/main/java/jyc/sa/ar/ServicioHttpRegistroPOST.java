@@ -32,8 +32,6 @@ import java.nio.charset.StandardCharsets;
 
 public class ServicioHttpRegistroPOST extends IntentService {
 
-    private HttpURLConnection conexionHttp;
-    private URL mURL;
 
     public ServicioHttpRegistroPOST() {
         super("ServicioHttpRegistroPOST");
@@ -95,7 +93,6 @@ public class ServicioHttpRegistroPOST extends IntentService {
             conexionHttp.setConnectTimeout(5000);
             conexionHttp.setRequestMethod("POST");
             DataOutputStream wr =new DataOutputStream(conexionHttp.getOutputStream());
-            //OutputStream wr = new BufferedOutputStream(conexionHttp.getOutputStream());
             wr.write(datosJson.toString().getBytes("UTF-8"));
             Log.i("SERVICIO_REGISTRO", "Se envia al server"+datosJson.toString());
             wr.flush();
@@ -103,8 +100,6 @@ public class ServicioHttpRegistroPOST extends IntentService {
 
             conexionHttp.connect();
             int responseCode= conexionHttp.getResponseCode();
-            Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.getResponseMessage());
-            Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ responseCode);
             if((responseCode == conexionHttp.HTTP_OK) || (responseCode == conexionHttp.HTTP_CREATED)) {
                 Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.toString());
                 result = convertInputStreamToString(new InputStreamReader(conexionHttp.getInputStream()));
@@ -112,8 +107,6 @@ public class ServicioHttpRegistroPOST extends IntentService {
             }else {
                 result = "NO_OK";
                  Toast.makeText(this, "ATENCIÓN! Falló la conexión al servidor", Toast.LENGTH_LONG).show();
-                Log.i("ACA", "La uri:" +uri);
-                Log.i("ACA", "Se murio");
             }
 
             conexionHttp.disconnect();
@@ -125,14 +118,12 @@ public class ServicioHttpRegistroPOST extends IntentService {
     }
 
     private String convertInputStreamToString(InputStreamReader input) throws IOException {
-        Log.e("LLEGA ACA??1111","ENTRA AL CONVERT?? "+ input.toString());
         BufferedReader streamReader = new BufferedReader(input);
         StringBuilder respondStreamBuild = new StringBuilder();
         String inputStr;
         while ((inputStr = streamReader.readLine()) != null)
             respondStreamBuild.append(inputStr);
 
-        Log.e("LLEGA ACA??2222","Termina el CONVERT?? "+ respondStreamBuild.toString());
 
         return respondStreamBuild.toString();
     }

@@ -17,8 +17,6 @@ import java.net.URL;
 
 public class ServicioHttpEvento extends IntentService {
 
-    private HttpURLConnection conexionHttp;
-    private URL mURL;
     private String token="";
     public ServicioHttpEvento() {
         super("ServicioHttpEvento");
@@ -69,7 +67,6 @@ public class ServicioHttpEvento extends IntentService {
     private String post(String uri, JSONObject datosJson) {
         HttpURLConnection conexionHttp=null;
         String result="";
-        //Log.i("aca","TOKEN DEL POST "+token);
 
         try {
             URL mUrl=new URL(uri);
@@ -81,7 +78,6 @@ public class ServicioHttpEvento extends IntentService {
             conexionHttp.setConnectTimeout(5000);
             conexionHttp.setRequestMethod("POST");
             DataOutputStream wr =new DataOutputStream(conexionHttp.getOutputStream());
-            //OutputStream wr = new BufferedOutputStream(conexionHttp.getOutputStream());
             wr.write(datosJson.toString().getBytes("UTF-8"));
             Log.i("SERVICIO_EVENTO", "Se envia al server"+datosJson.toString());
             wr.flush();
@@ -90,16 +86,11 @@ public class ServicioHttpEvento extends IntentService {
             conexionHttp.connect();
 
             int responseCode= conexionHttp.getResponseCode();
-           // Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.getResponseMessage());
-           // Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ responseCode);
             if((responseCode == conexionHttp.HTTP_OK) || (responseCode == conexionHttp.HTTP_CREATED)) {
-            //    Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.toString());
                 result = convertInputStreamToString(new InputStreamReader(conexionHttp.getInputStream()));
 
             }else {
                 result = "NO_OK";
-                Log.i("ACA", "La uri:" +uri);
-                Log.i("ACA", "Se murio");
             }
 
             conexionHttp.disconnect();
@@ -111,14 +102,12 @@ public class ServicioHttpEvento extends IntentService {
     }
 
     private String convertInputStreamToString(InputStreamReader input) throws IOException {
-      //  Log.e("LLEGA ACA??1111","ENTRA AL CONVERT?? "+ input.toString());
         BufferedReader streamReader = new BufferedReader(input);
         StringBuilder respondStreamBuild = new StringBuilder();
         String inputStr;
         while ((inputStr = streamReader.readLine()) != null)
             respondStreamBuild.append(inputStr);
 
-      //  Log.e("LLEGA ACA??2222","Termina el CONVERT?? "+ respondStreamBuild.toString());
 
         return respondStreamBuild.toString();
     }

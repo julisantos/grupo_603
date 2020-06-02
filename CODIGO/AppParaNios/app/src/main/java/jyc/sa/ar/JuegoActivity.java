@@ -3,12 +3,14 @@ package jyc.sa.ar;
 import androidx.annotation.InspectableProperty;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.app.IntentService;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
@@ -63,12 +65,16 @@ public class JuegoActivity extends AppCompatActivity {
     };
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
+
         informarEvento("login","ACTIVO","El usuario se encuentra logueado al sistema");
+        informarEvento("juego","ACTIVO","El usuario esta en la interfaz del juego");
 
 
         juego = (LinearLayout)findViewById(R.id.activitySeleccionarLetra);
@@ -95,6 +101,7 @@ public class JuegoActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         informarEvento("login","INACTIVO","El usuario cerro la aplicacion");
+        informarEvento("juego","INACTIVO","El usuario salio del juego");
 
     }
 
@@ -118,6 +125,7 @@ public class JuegoActivity extends AppCompatActivity {
         activarSensores();
 
 
+        informarEvento("resultados","INACTIVO","El usuario no se encuentra en la pantalla de sus resultados");
 
         informarEvento("sensorAcelerometro","ACTIVO","se activo el sensor acelerometro");
         informarEvento("sensorProximidad","ACTIVO","se activo el sensor de proximidad");
@@ -166,15 +174,11 @@ public class JuegoActivity extends AppCompatActivity {
     private void compararConImg(String vocal) {
 
         if(vocal.equals(vocalImg)) {
-            //Toast.makeText(this, "Respuesta Correcta el animal de la imagen empieza con " + vocalImg, Toast.LENGTH_LONG).show();
             cantCorrectas++;
-            //Toast.makeText(this, "Cantidad de respuestas correctas: "+cantCorrectas, Toast.LENGTH_LONG).show();
             generarImgRandom();
 
         } else {
-            //Toast.makeText(this,"Respuesta Incorrecta el animal de la imagen empieza con "+ vocalImg,Toast.LENGTH_LONG).show();
             cantIncorrectas++;
-            //Toast.makeText(this, "Cantidad de respuestas incorrectas: "+cantIncorrectas, Toast.LENGTH_LONG).show();
         }
     }
 
@@ -184,10 +188,13 @@ public class JuegoActivity extends AppCompatActivity {
             @Override
             public void onSensorChanged(SensorEvent event) {
                 Float valorProximidad = Float.valueOf(event.values[0]);
+
                 if(valorProximidad == 0){
                     Intent isensorProx = new Intent(JuegoActivity.this, ScoreActivity.class);
                     isensorProx.putExtra("cantAciertos",String.valueOf(cantCorrectas));
                     isensorProx.putExtra("cantDesaciertos",String.valueOf(cantIncorrectas));
+                    informarEvento("resultados","ACTIVO","El usuario esta mirando su cantidad de acierto y desaciertos");
+
                     startActivity(isensorProx);
                 }
 

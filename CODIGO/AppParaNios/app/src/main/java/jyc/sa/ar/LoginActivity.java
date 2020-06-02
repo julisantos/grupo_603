@@ -27,7 +27,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText txtPassword;
     public TextView txtResp;
     public String token="";
-    public String respuestaBad="";
 
     public IntentFilter filtro;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
@@ -38,7 +37,7 @@ public class LoginActivity extends AppCompatActivity {
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
                 Log.i("SERVICIO_LOGIN", "Se recibe del server" + datosJsonString );
-
+                if(datosJson.toString()==null) return;
                 txtResp = (TextView) findViewById(R.id.textrespuesta);
                 txtResp.setText(datosJsonString);
                 token= datosJson.getString("token");
@@ -125,11 +124,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void enviarIntent() {
+        if(token!="") {
             Intent i = new Intent(LoginActivity.this, JuegoActivity.class);
             i.putExtra("token", token);
-            //Log.i("aca", "Se rompe despues del token " + token);
 
             startActivity(i);
+        }
     }
 
     private void configurarBroadcastReceiver() {

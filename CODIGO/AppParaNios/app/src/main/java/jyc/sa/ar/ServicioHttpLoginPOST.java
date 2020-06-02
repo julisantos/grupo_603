@@ -17,8 +17,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class ServicioHttpLoginPOST extends IntentService {
-    private HttpURLConnection conexionHttp;
-    private URL mURL;
 
     public ServicioHttpLoginPOST() {
         super("ServicioHttpLoginPOST");
@@ -98,8 +96,6 @@ public class ServicioHttpLoginPOST extends IntentService {
 
                 Toast.makeText(this, "El/los campo/s ingresados es incorrecto", Toast.LENGTH_LONG).show();
 
-                Log.i("ACA", "La uri:" +uri);
-                Log.i("ACA", "Se murio");
             }
 
             conexionHttp.disconnect();
@@ -111,14 +107,12 @@ public class ServicioHttpLoginPOST extends IntentService {
     }
 
     private String convertInputStreamToString(InputStreamReader input) throws IOException {
-        Log.e("LLEGA ACA??1111","ENTRA AL CONVERT?? "+ input.toString());
         BufferedReader streamReader = new BufferedReader(input);
         StringBuilder respondStreamBuild = new StringBuilder();
         String inputStr;
         while ((inputStr = streamReader.readLine()) != null)
             respondStreamBuild.append(inputStr);
 
-        Log.e("LLEGA ACA??2222","Termina el CONVERT?? "+ respondStreamBuild.toString());
 
         return respondStreamBuild.toString();
 

@@ -43,7 +43,7 @@ public class RegistroActivity extends AppCompatActivity {
 
                   txtResp.setText(datosJsonString);
 
-                Toast.makeText(context.getApplicationContext(), "Se recibio respuesta del Server", Toast.LENGTH_LONG).show();
+                //Toast.makeText(context.getApplicationContext(), "Se recibio respuesta del Server", Toast.LENGTH_LONG).show();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
