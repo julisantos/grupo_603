@@ -64,7 +64,6 @@ public class ServicioHttpRegistroPOST extends IntentService {
         }
         if (result.equals("NO_OK")){
             Log.e("aca","Se recibio una respuesta NO_OK");
-            Toast.makeText(this, "ATENCIÓN! Falló la conexión al servidor", Toast.LENGTH_LONG).show();
             return;
         }
 
@@ -101,7 +100,6 @@ public class ServicioHttpRegistroPOST extends IntentService {
             conexionHttp.connect();
             int responseCode= conexionHttp.getResponseCode();
             if((responseCode == conexionHttp.HTTP_OK) || (responseCode == conexionHttp.HTTP_CREATED)) {
-                Log.e("LLEGA ACA??","ENTRA AL CONVERT?? "+ conexionHttp.toString());
                 result = convertInputStreamToString(new InputStreamReader(conexionHttp.getInputStream()));
 
             }else {

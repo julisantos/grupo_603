@@ -111,7 +111,7 @@ public class RegistroActivity extends AppCompatActivity {
                     JSONObject obj = new JSONObject();
 
                     try {
-                        obj.put("env", "TEST");
+                        obj.put("env", "DEV");
                         obj.put("name", txtNombre.getText().toString());
                         obj.put("lastname", txtApellido.getText().toString());
                         obj.put("dni", txtDni.getText().toString());
@@ -124,6 +124,7 @@ public class RegistroActivity extends AppCompatActivity {
                         i.putExtra("datosJson", obj.toString());
 
                         startService(i);
+
 
                     } catch (JSONException e) {
                         e.printStackTrace();
