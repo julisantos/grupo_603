@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="jyc.sa.ar">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -16,17 +17,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".EventosActivity"></activity>
-        <activity android:name=".ScoreActivity" />
-        <activity android:name=".RegistroActivity">
+
+
+        <activity android:name=".EventosActivity" tools:ignore="LockedOrientationActivity"/>
+        <activity android:name=".ScoreActivity"  tools:ignore="LockedOrientationActivity"/>
+        <activity android:name=".RegistroActivity"  tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".JuegoActivity" />
+
+    </activity>
+        <activity android:name=".LoginActivity"  tools:ignore="LockedOrientationActivity"/>
+        <activity android:name=".JuegoActivity"  tools:ignore="LockedOrientationActivity"/>
         <service android:name=".ServicioHttpRegistroPOST" />
         <service android:name=".ServicioHttpLoginPOST" />
         <service android:name=".ServicioHttpEvento" />

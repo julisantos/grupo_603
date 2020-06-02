@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -56,6 +57,12 @@ public class EventosActivity extends AppCompatActivity {
         ArrayAdapter adaptador = new ArrayAdapter(this,android.R.layout.simple_list_item_1,lista);
         adaptador.clear();
         listEventos.setAdapter(adaptador);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
 
     }
 }

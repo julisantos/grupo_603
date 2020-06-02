@@ -20,14 +20,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="30dip"
+            android:textColor="#bf360c"
             android:text="EVENTOS" />
         <Button
             android:id="@+id/btnEventos"
-            android:layout_width="250dp"
-            android:layout_height="50dp"
+            android:layout_width="160dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_horizontal"
             android:onClick="borrarHistorial"
-            android:text="BORRAR HISTORIAL" />
+            android:text="BORRAR HISTORIAL"
+            android:textColor="#ffff"
+            android:background="#bf360c"/>
 
         <ScrollView
             android:layout_width="match_parent"

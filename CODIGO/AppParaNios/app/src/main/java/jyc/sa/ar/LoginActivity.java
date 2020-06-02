@@ -37,7 +37,9 @@ public class LoginActivity extends AppCompatActivity {
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
                 Log.i("SERVICIO_LOGIN", "Se recibe del server" + datosJsonString );
+
                 if(datosJson.toString()==null) return;
+
                 txtResp = (TextView) findViewById(R.id.textrespuesta);
                 txtResp.setText(datosJsonString);
                 token= datosJson.getString("token");
@@ -48,8 +50,6 @@ public class LoginActivity extends AppCompatActivity {
 
         }
     };
-
-
 
 
     private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
@@ -66,15 +66,11 @@ public class LoginActivity extends AppCompatActivity {
             }else{
                 Log.d("MenuActivity", "DISCONNECTED");
                 Toast.makeText(context.getApplicationContext(), "ATENCION! No hay acceso a internet", Toast.LENGTH_LONG).show();
-
             }
-
         }
     };
 
     private static final String URI_LOGIN = "http://so-unlam.net.ar/api/api/login";
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState1) {
@@ -85,7 +81,6 @@ public class LoginActivity extends AppCompatActivity {
 
         txtEmail = (EditText) findViewById(R.id.txtEmail);
         txtPassword = (EditText) findViewById(R.id.txtPass);
-
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -119,8 +114,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         configurarBroadcastReceiver();
-
-
     }
 
     private void enviarIntent() {
@@ -129,6 +122,18 @@ public class LoginActivity extends AppCompatActivity {
             i.putExtra("token", token);
 
             startActivity(i);
+            finish();
+        }
+        else {
+            txtResp = (TextView) findViewById(R.id.textrespuesta);
+            txtResp.setText("ATENCION! Fallo la conexion con el servidor. Puede que alguno de los campos ingresados no sea valido");
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                public void run() {
+                    txtResp.setText("");
+
+                }
+            }, 3000);
         }
     }
 
@@ -139,7 +144,11 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onPause() {
+        super.onPause();
 
+    }
 
 
 

@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,7 +30,6 @@ public class RegistroActivity extends AppCompatActivity {
     private EditText txtComision;
     private Button btnRegistrar;
     public TextView txtResp;
-    //private Handler HandlerbtnRegistrar;///POSIBLE PROBLEMA
     public IntentFilter filtro;
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
@@ -37,13 +37,10 @@ public class RegistroActivity extends AppCompatActivity {
             try {
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
-
                 Log.i("SERVICIO", "Se recibe del server" + datosJsonString );
                 txtResp = (TextView) findViewById(R.id.textrespuesta);
+                txtResp.setText(datosJsonString);
 
-                  txtResp.setText(datosJsonString);
-
-                //Toast.makeText(context.getApplicationContext(), "Se recibio respuesta del Server", Toast.LENGTH_LONG).show();
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -54,7 +51,11 @@ public class RegistroActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+    }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
@@ -87,8 +88,6 @@ public class RegistroActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registro);
 
         registerReceiver(networkStateReceiver, new IntentFilter(android.net.ConnectivityManager.CONNECTIVITY_ACTION));
-
-
 
         txtNombre = (EditText) findViewById(R.id.txtNombre);
         txtApellido = (EditText) findViewById(R.id.txtApellido);
@@ -134,7 +133,7 @@ public class RegistroActivity extends AppCompatActivity {
             }
         });
 
-        configurarBroadcastReceiver();/// cambiar nombre
+        configurarBroadcastReceiver();
     }
 
     private void configurarBroadcastReceiver() {
@@ -147,8 +146,8 @@ public class RegistroActivity extends AppCompatActivity {
     public void accederALogin(View view) {
 
             startActivity(new Intent(RegistroActivity.this,LoginActivity.class));
+            finish();
         }
-
 
 
     public boolean esValido() {

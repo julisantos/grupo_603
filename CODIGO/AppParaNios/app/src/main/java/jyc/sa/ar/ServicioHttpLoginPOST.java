@@ -49,8 +49,7 @@ public class ServicioHttpLoginPOST extends IntentService {
         }
 
          if (result.equals("NO_OK")){
-            Log.e("aca","Se recibio una respuesta NO_OK");
-            Toast.makeText(this, "ATENCIÓN! Falló la conexión al servidor", Toast.LENGTH_LONG).show();
+            Log.e("SERVICIO_LOGIN","Se recibio una respuesta NO_OK");
              Intent i =new Intent("android.intent.action.MAIN");
              i.putExtra("datosJson", result);
              sendBroadcast(i);
@@ -91,12 +90,8 @@ public class ServicioHttpLoginPOST extends IntentService {
 
             if((responseCode == conexionHttp.HTTP_OK) || (responseCode == conexionHttp.HTTP_CREATED)) {
                 result = convertInputStreamToString(new InputStreamReader(conexionHttp.getInputStream()));
-            }else {
+            }else
                 result = "NO_OK";
-
-                Toast.makeText(this, "El/los campo/s ingresados es incorrecto", Toast.LENGTH_LONG).show();
-
-            }
 
             conexionHttp.disconnect();
 
@@ -107,12 +102,12 @@ public class ServicioHttpLoginPOST extends IntentService {
     }
 
     private String convertInputStreamToString(InputStreamReader input) throws IOException {
+
         BufferedReader streamReader = new BufferedReader(input);
         StringBuilder respondStreamBuild = new StringBuilder();
         String inputStr;
         while ((inputStr = streamReader.readLine()) != null)
             respondStreamBuild.append(inputStr);
-
 
         return respondStreamBuild.toString();
 

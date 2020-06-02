@@ -9,6 +9,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 public class ScoreActivity extends AppCompatActivity  {
@@ -45,12 +46,13 @@ public class ScoreActivity extends AppCompatActivity  {
 
     @Override
     protected void onPause() {
-
         super.onPause();
+
     }
 
     @Override
     protected void onDestroy() {
+
         super.onDestroy();
     }
 
