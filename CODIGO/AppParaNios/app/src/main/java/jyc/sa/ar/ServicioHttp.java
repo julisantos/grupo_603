@@ -1,13 +1,11 @@
 package jyc.sa.ar;
 
+
 import android.app.IntentService;
 import android.content.Intent;
 import android.util.Log;
-import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,27 +13,31 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public class ServicioHttpEvento extends IntentService {
+
+
+public class ServicioHttp extends IntentService {
 
     private String token="";
-    public ServicioHttpEvento() {
-        super("ServicioHttpEvento");
+    public ServicioHttp() {
+        super("ServicioHttp");
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.i("SERVICIO_EVENTO", "Servicio onCreate()");
+        Log.i("SERVIDOR", "Servicio onCreate()");
     }
 
     protected void onHandleIntent(Intent intent){
         try {
             String uri = intent.getExtras().getString("uri");
-            token = intent.getExtras().getString("token");
+            if(uri.equals("http://so-unlam.net.ar/api/api/event"))
+                token = intent.getExtras().getString("token");
+
             JSONObject datosJson = new JSONObject(intent.getExtras().getString("datosJson"));
             servidorPost(uri,datosJson);
         } catch (JSONException e) {
-            Log.e("SERVICIO_EVENTO","ERROR"+ e.toString());
+            Log.e("SERVIDOR","ERROR"+ e.toString());
         }
 
     }
@@ -45,17 +47,18 @@ public class ServicioHttpEvento extends IntentService {
         String result  = post (uri,datosJson);
 
         if (result == null){
-            Log.e("SERVICIO_EVENTO","Error en POST");
+            Log.e("SERVIDOR","Error en POST");
             return;
         }
         if (result.equals("NO_OK")){
-            Log.e("SERVICIO_EVENTO","Se recibio una respuesta NO_OK");
+            Log.e("SERVIDOR","Se recibio una respuesta NO_OK");
             return;
         }
 
         Intent i =new Intent("jyc.sa.intent.action.MAIN");
         i.putExtra("datosJson", result);
         sendBroadcast(i);
+
     }
 
     @Override
@@ -71,29 +74,26 @@ public class ServicioHttpEvento extends IntentService {
             URL mUrl=new URL(uri);
             conexionHttp = (HttpURLConnection) mUrl.openConnection();
             conexionHttp.setRequestProperty("Content-Type","application/json; charset=UTF-8");
-            conexionHttp.setRequestProperty("token", token);
+            if(uri.equals("http://so-unlam.net.ar/api/api/event"))
+                conexionHttp.setRequestProperty("token", token);
+
             conexionHttp.setDoOutput(true);
             conexionHttp.setDoInput(true);
             conexionHttp.setConnectTimeout(5000);
             conexionHttp.setRequestMethod("POST");
             DataOutputStream wr =new DataOutputStream(conexionHttp.getOutputStream());
             wr.write(datosJson.toString().getBytes("UTF-8"));
-            Log.i("SERVICIO_EVENTO", "Se envia al server"+datosJson.toString());
-            Toast.makeText(this, "ATENCIÓN! Falló la conexión al servidor", Toast.LENGTH_LONG).show();
+            Log.i("SERVIDOR", "Se envia al server"+datosJson.toString());
             wr.flush();
             wr.close();
 
             conexionHttp.connect();
-
             int responseCode= conexionHttp.getResponseCode();
             if((responseCode == conexionHttp.HTTP_OK) || (responseCode == conexionHttp.HTTP_CREATED)) {
                 result = convertInputStreamToString(new InputStreamReader(conexionHttp.getInputStream()));
 
             }else
                 result = "NO_OK";
-
-
-            conexionHttp.disconnect();
 
         }catch (Exception e) {
             return null;
@@ -110,4 +110,5 @@ public class ServicioHttpEvento extends IntentService {
 
         return respondStreamBuild.toString();
     }
+
 }

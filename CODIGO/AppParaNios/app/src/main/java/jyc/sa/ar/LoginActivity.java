@@ -2,21 +2,13 @@ package jyc.sa.ar;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,28 +20,6 @@ public class LoginActivity extends AppCompatActivity {
     public TextView txtResp;
     public String token="";
 
-    public IntentFilter filtro;
-    private BroadcastReceiver receiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            try {
-
-                String datosJsonString = intent.getStringExtra("datosJson");
-                JSONObject datosJson = new JSONObject(datosJsonString);
-                Log.i("SERVICIO_LOGIN", "Se recibe del server" + datosJsonString );
-
-                if(datosJson.toString()==null) return;
-
-                txtResp = (TextView) findViewById(R.id.textrespuesta);
-                txtResp.setText(datosJsonString);
-                token= datosJson.getString("token");
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-    };
 
     private static final String URI_LOGIN = "http://so-unlam.net.ar/api/api/login";
 
@@ -71,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
                     obj.put("env", "DEV");
                     obj.put("email", txtEmail.getText().toString());
                     obj.put("password", txtPassword.getText().toString());
-                    Intent i = new Intent(LoginActivity.this, ServicioHttpLoginPOST.class);
+                    Intent i = new Intent(LoginActivity.this, ServicioHttp.class);
                     i.putExtra("uri", URI_LOGIN);
                     i.putExtra("datosJson", obj.toString());
 
@@ -93,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
 
         });
 
-        configurarBroadcastReceiver();
+
     }
 
     private void enviarIntent() {
@@ -110,23 +80,15 @@ public class LoginActivity extends AppCompatActivity {
             handler.postDelayed(new Runnable() {
                 public void run() {
                     txtResp.setText("");
-
                 }
             }, 3000);
         }
-    }
-
-    private void configurarBroadcastReceiver() {
-        filtro=new IntentFilter("android.intent.action.MAIN");
-        filtro.addCategory("android.intent.category.LAUNCHER");
-        registerReceiver(receiver, filtro);
     }
 
 
     @Override
     protected void onPause() {
         super.onPause();
-
     }
 
 

@@ -30,9 +30,7 @@
     </activity>
         <activity android:name=".LoginActivity"  tools:ignore="LockedOrientationActivity"/>
         <activity android:name=".JuegoActivity"  tools:ignore="LockedOrientationActivity"/>
-        <service android:name=".ServicioHttpRegistroPOST" />
-        <service android:name=".ServicioHttpLoginPOST" />
-        <service android:name=".ServicioHttpEvento" />
+        <service android:name=".ServicioHttp" />
     </application>
 
 </manifest>

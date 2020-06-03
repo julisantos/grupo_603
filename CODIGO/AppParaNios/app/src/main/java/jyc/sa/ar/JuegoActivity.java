@@ -1,38 +1,19 @@
 package jyc.sa.ar;
 
-import androidx.annotation.InspectableProperty;
 import androidx.appcompat.app.AppCompatActivity;
-
-import android.annotation.SuppressLint;
-import android.app.IntentService;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
-import android.hardware.SensorEventListener2;
 import android.hardware.SensorManager;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.nio.file.Files;
 import java.util.Random;
 
 public class JuegoActivity extends AppCompatActivity {
@@ -46,10 +27,9 @@ public class JuegoActivity extends AppCompatActivity {
     Sensor sensorprox,sensoracel;
     SensorEventListener sensorEventListeneracel,sensorEventListenerprox;
 
-    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -184,8 +164,7 @@ public class JuegoActivity extends AppCompatActivity {
             public void onSensorChanged(SensorEvent event) {
                 float ejeX = event.values[0];
                 float ejeY = event.values[1];
-                float ejeZ = event.values[2];
-                if(ejeX<-8 || ejeX>8 || ejeY<-8 || ejeY>8 || ejeY<-8 || ejeY>8){
+                if(ejeX<-8 || ejeX>8 || ejeY<-8 || ejeY>8){
                     generarImgRandom();
                 }
             }
@@ -220,7 +199,7 @@ public class JuegoActivity extends AppCompatActivity {
             obj.put("type_events", tipoEvento);
             obj.put("state", estado);
             obj.put("description", descripcion);
-            Intent i = new Intent(JuegoActivity.this, ServicioHttpEvento.class);
+            Intent i = new Intent(JuegoActivity.this, ServicioHttp.class);
             i.putExtra("uri", "http://so-unlam.net.ar/api/api/event");
             i.putExtra("token", token);
             i.putExtra("datosJson", obj.toString());

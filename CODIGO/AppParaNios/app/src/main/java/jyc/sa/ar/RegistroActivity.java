@@ -1,6 +1,5 @@
 package jyc.sa.ar;
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -15,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -31,6 +29,8 @@ public class RegistroActivity extends AppCompatActivity {
     private Button btnRegistrar;
     public TextView txtResp;
     public IntentFilter filtro;
+    public String token="";
+
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -38,6 +38,28 @@ public class RegistroActivity extends AppCompatActivity {
                 String datosJsonString = intent.getStringExtra("datosJson");
                 JSONObject datosJson = new JSONObject(datosJsonString);
                 Log.i("SERVICIO", "Se recibe del server" + datosJsonString );
+
+                if(datosJson.toString()==null) return;
+
+                token= datosJson.getString("token");
+                if(token!="") {
+                    Intent i = new Intent(RegistroActivity.this, JuegoActivity.class);
+                    i.putExtra("token", token);
+
+                    startActivity(i);
+
+                }
+                else {
+                    txtResp = (TextView) findViewById(R.id.textrespuesta);
+                    txtResp.setText("ATENCION! Fallo la conexion con el servidor. Puede que alguno de los campos ingresados no sea valido");
+                    Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        public void run() {
+                            txtResp.setText("");
+                        }
+                    }, 3000);
+                }
+
                 txtResp = (TextView) findViewById(R.id.textrespuesta);
                 txtResp.setText(datosJsonString);
 
@@ -73,7 +95,6 @@ public class RegistroActivity extends AppCompatActivity {
                 Log.d("MenuActivity", "DISCONNECTED");
                 Toast.makeText(context.getApplicationContext(), "ATENCION! No hay acceso a internet", Toast.LENGTH_LONG).show();
             }
-
         }
     };
 
@@ -108,7 +129,7 @@ public class RegistroActivity extends AppCompatActivity {
                     JSONObject obj = new JSONObject();
 
                     try {
-                        obj.put("env", "TEST");
+                        obj.put("env", "DEV");
                         obj.put("name", txtNombre.getText().toString());
                         obj.put("lastname", txtApellido.getText().toString());
                         obj.put("dni", txtDni.getText().toString());
@@ -116,7 +137,7 @@ public class RegistroActivity extends AppCompatActivity {
                         obj.put("password", txtPassword.getText().toString());
                         obj.put("commission", txtComision.getText().toString());
                         obj.put("group", txtGrupo.getText().toString());
-                        Intent i = new Intent(RegistroActivity.this, ServicioHttpRegistroPOST.class);
+                        Intent i = new Intent(RegistroActivity.this, ServicioHttp.class);
                         i.putExtra("uri", URI_REGISTRO);
                         i.putExtra("datosJson", obj.toString());
 
@@ -142,7 +163,7 @@ public class RegistroActivity extends AppCompatActivity {
 
     public void accederALogin(View view) {
 
-        startActivity(new Intent(RegistroActivity.this,LoginActivity.class));
+        startActivity( new Intent(RegistroActivity.this, LoginActivity.class));
     }
 
 
@@ -191,6 +212,7 @@ public class RegistroActivity extends AppCompatActivity {
             txtGrupo.setError("Debe ingresar su numero de grupo para registrarse");
             valido = false;
         }
+
         return valido;
     }
 }
