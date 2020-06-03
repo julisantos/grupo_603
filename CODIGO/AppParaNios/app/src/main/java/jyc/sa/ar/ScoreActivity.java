@@ -14,23 +14,18 @@ import android.widget.TextView;
 
 public class ScoreActivity extends AppCompatActivity  {
 
-
     private TextView tvAciertos;
     private TextView tvDesaciertos;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_score);
 
-         setContentView(R.layout.activity_score);
-
-         tvAciertos = (TextView)findViewById(R.id.textAciertos);
-         tvDesaciertos = (TextView)findViewById(R.id.textDesaciertos);
-         recibirYsetiarAciertosYDesaciertos();
-
-
+        tvAciertos = (TextView)findViewById(R.id.textAciertos);
+        tvDesaciertos = (TextView)findViewById(R.id.textDesaciertos);
+        recibirYsetiarAciertosYDesaciertos();
     }
 
     @Override
@@ -62,8 +57,6 @@ public class ScoreActivity extends AppCompatActivity  {
         super.onStop();
     }
 
-
-
     private  void recibirYsetiarAciertosYDesaciertos()
     {
         Bundle extras = getIntent().getExtras();
@@ -73,7 +66,6 @@ public class ScoreActivity extends AppCompatActivity  {
         tvDesaciertos.setText(desaciertos);
         tvAciertos.setTextColor(Color.GREEN);
         tvDesaciertos.setTextColor(Color.RED);
-
     }
 
 }

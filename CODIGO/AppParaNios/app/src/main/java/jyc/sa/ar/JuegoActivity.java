@@ -46,25 +46,6 @@ public class JuegoActivity extends AppCompatActivity {
     Sensor sensorprox,sensoracel;
     SensorEventListener sensorEventListeneracel,sensorEventListenerprox;
 
-    private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo ni = manager.getActiveNetworkInfo();
-            onNetworkChange(ni, context);
-        }
-
-        private void onNetworkChange(NetworkInfo networkInfo, Context context) {
-            if (networkInfo != null && networkInfo.isConnected() ) {
-                Log.d("MenuActivity", "CONNECTED");
-            }else{
-                Log.d("MenuActivity", "DISCONNECTED");
-                Toast.makeText(context.getApplicationContext(), "ATENCION! No hay acceso a internet", Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +56,6 @@ public class JuegoActivity extends AppCompatActivity {
 
         informarEvento("login","ACTIVO","El usuario se encuentra logueado al sistema");
         informarEvento("juego","ACTIVO","El usuario esta en la interfaz del juego");
-
 
         juego = (LinearLayout)findViewById(R.id.activitySeleccionarLetra);
         smprox = (SensorManager)getSystemService(SENSOR_SERVICE);
@@ -90,10 +70,6 @@ public class JuegoActivity extends AppCompatActivity {
         sensorAcelerometroCambiarImg();
         sensorProximidadMostrarResultados();
         activarSensores();
-
-
-
-
 
     }
 
@@ -110,12 +86,8 @@ public class JuegoActivity extends AppCompatActivity {
         super.onPause();
         desactivarSensores();
 
-
-
-
         informarEvento("sensorAcelerometro","INACTIVO","se activo el sensor acelerometro");
         informarEvento("sensorProximidad","INACTIVO","se activo el sensor de proximidad");
-
 
     }
 
@@ -124,12 +96,10 @@ public class JuegoActivity extends AppCompatActivity {
         super.onResume();
         activarSensores();
 
-
         informarEvento("resultados","INACTIVO","El usuario no se encuentra en la pantalla de sus resultados");
 
         informarEvento("sensorAcelerometro","ACTIVO","se activo el sensor acelerometro");
         informarEvento("sensorProximidad","ACTIVO","se activo el sensor de proximidad");
-
 
     }
 
@@ -178,6 +148,7 @@ public class JuegoActivity extends AppCompatActivity {
             generarImgRandom();
 
         } else {
+            Toast.makeText(this, "NO:( ¡VOLVÉ A INTENTARLO!", Toast.LENGTH_SHORT).show();
             cantIncorrectas++;
         }
     }
@@ -216,7 +187,6 @@ public class JuegoActivity extends AppCompatActivity {
                 float ejeZ = event.values[2];
                 if(ejeX<-8 || ejeX>8 || ejeY<-8 || ejeY>8 || ejeY<-8 || ejeY>8){
                     generarImgRandom();
-
                 }
             }
 

@@ -51,25 +51,6 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
-
-    private BroadcastReceiver networkStateReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo ni = manager.getActiveNetworkInfo();
-            onNetworkChange(ni, context);
-        }
-
-        private void onNetworkChange(NetworkInfo networkInfo, Context context) {
-            if (networkInfo != null && networkInfo.isConnected() ) {
-                Log.d("MenuActivity", "CONNECTED");
-            }else{
-                Log.d("MenuActivity", "DISCONNECTED");
-                Toast.makeText(context.getApplicationContext(), "ATENCION! No hay acceso a internet", Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
     private static final String URI_LOGIN = "http://so-unlam.net.ar/api/api/login";
 
     @Override
@@ -97,7 +78,6 @@ public class LoginActivity extends AppCompatActivity {
                     startService(i);
 
                         Handler handler = new Handler();
-
                         handler.postDelayed(new Runnable() {
                             public void run() {
                                 enviarIntent();
@@ -122,7 +102,6 @@ public class LoginActivity extends AppCompatActivity {
             i.putExtra("token", token);
 
             startActivity(i);
-            finish();
         }
         else {
             txtResp = (TextView) findViewById(R.id.textrespuesta);

@@ -72,7 +72,6 @@ public class RegistroActivity extends AppCompatActivity {
             }else{
                 Log.d("MenuActivity", "DISCONNECTED");
                 Toast.makeText(context.getApplicationContext(), "ATENCION! No hay acceso a internet", Toast.LENGTH_LONG).show();
-
             }
 
         }
@@ -98,8 +97,6 @@ public class RegistroActivity extends AppCompatActivity {
         txtComision = (EditText) findViewById(R.id.numComision);
         btnRegistrar = (Button) findViewById(R.id.btnRegistrar);
 
-
-
         btnRegistrar.setOnClickListener(new View.OnClickListener() {
             @Override
 
@@ -111,7 +108,7 @@ public class RegistroActivity extends AppCompatActivity {
                     JSONObject obj = new JSONObject();
 
                     try {
-                        obj.put("env", "DEV");
+                        obj.put("env", "TEST");
                         obj.put("name", txtNombre.getText().toString());
                         obj.put("lastname", txtApellido.getText().toString());
                         obj.put("dni", txtDni.getText().toString());
@@ -124,7 +121,6 @@ public class RegistroActivity extends AppCompatActivity {
                         i.putExtra("datosJson", obj.toString());
 
                         startService(i);
-
 
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -146,9 +142,8 @@ public class RegistroActivity extends AppCompatActivity {
 
     public void accederALogin(View view) {
 
-            startActivity(new Intent(RegistroActivity.this,LoginActivity.class));
-            finish();
-        }
+        startActivity(new Intent(RegistroActivity.this,LoginActivity.class));
+    }
 
 
     public boolean esValido() {

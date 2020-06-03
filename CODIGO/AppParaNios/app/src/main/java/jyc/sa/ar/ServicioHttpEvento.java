@@ -49,8 +49,7 @@ public class ServicioHttpEvento extends IntentService {
             return;
         }
         if (result.equals("NO_OK")){
-            Log.e("aca","Se recibio una respuesta NO_OK");
-            Toast.makeText(this, "ATENCIÓN! Falló la conexión al servidor", Toast.LENGTH_LONG).show();
+            Log.e("SERVICIO_EVENTO","Se recibio una respuesta NO_OK");
             return;
         }
 
@@ -80,6 +79,7 @@ public class ServicioHttpEvento extends IntentService {
             DataOutputStream wr =new DataOutputStream(conexionHttp.getOutputStream());
             wr.write(datosJson.toString().getBytes("UTF-8"));
             Log.i("SERVICIO_EVENTO", "Se envia al server"+datosJson.toString());
+            Toast.makeText(this, "ATENCIÓN! Falló la conexión al servidor", Toast.LENGTH_LONG).show();
             wr.flush();
             wr.close();
 
@@ -89,9 +89,9 @@ public class ServicioHttpEvento extends IntentService {
             if((responseCode == conexionHttp.HTTP_OK) || (responseCode == conexionHttp.HTTP_CREATED)) {
                 result = convertInputStreamToString(new InputStreamReader(conexionHttp.getInputStream()));
 
-            }else {
+            }else
                 result = "NO_OK";
-            }
+
 
             conexionHttp.disconnect();
 
@@ -107,7 +107,6 @@ public class ServicioHttpEvento extends IntentService {
         String inputStr;
         while ((inputStr = streamReader.readLine()) != null)
             respondStreamBuild.append(inputStr);
-
 
         return respondStreamBuild.toString();
     }

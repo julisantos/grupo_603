@@ -93,6 +93,7 @@ public class ServicioHttpLoginPOST extends IntentService {
             }else
                 result = "NO_OK";
 
+
             conexionHttp.disconnect();
 
         }catch (Exception e) {
